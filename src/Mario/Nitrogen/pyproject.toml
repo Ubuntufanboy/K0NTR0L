@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nitrogen"
+version = "1.0.0"
+description = "VLM-based game playing agent"
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Default: everything
+dependencies = [
+    # Shared
+    "numpy",
+    "pyzmq",
+    
+    # Serve
+    "torch",
+    "pyyaml",
+    "einops",
+    "transformers",
+    "pydantic",
+    "diffusers",
+    "polars",
+    
+    # Play (Windows-only deps marked)
+    "pillow",
+    "opencv-python",
+    "pyautogui",
+    "gymnasium",
+    "psutil",
+    "av",
+    "dxcam; sys_platform == 'win32'",
+    "pywinctl; sys_platform == 'win32'",
+    "vgamepad; sys_platform == 'win32'",
+    "pywin32; sys_platform == 'win32'",
+    "xspeedhack; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+serve = [
+    "numpy",
+    "pyzmq",
+    "torch",
+    "pyyaml",
+    "einops",
+    "transformers",
+    "pydantic",
+    "diffusers",
+    "polars",
+]
+
+play = [
+    "numpy",
+    "pyzmq",
+    "pillow",
+    "opencv-python",
+    "pyautogui",
+    "gymnasium",
+    "psutil",
+    "av",
+    "dxcam",
+    "pywinctl",
+    "vgamepad",
+    "pywin32",
+    "xspeedhack",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["scripts*"]

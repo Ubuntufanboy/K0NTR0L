@@ -1,0 +1,28 @@
+{
+  "tasks": [
+    {
+      "task_id": "drive_fast",
+      "command": "Drive as fast as possible while staying safe",
+      "success_criteria": "Maintain speed above 100 km/h for at least 10 seconds without collision",
+      "proxy_rewards": [
+        "+1 reward for every km/h above 100 km/h",
+        "+2 reward per km/h/s of acceleration above 0",
+        "-10 reward for any collision or near-miss"
+      ],
+      "episode_length": 1000,
+      "reward_scale": 1.0
+    },
+    {
+      "task_id": "lane_change",
+      "command": "Change lanes smoothly to the left",
+      "success_criteria": "Complete lane change within 5 seconds with smooth steering",
+      "proxy_rewards": [
+        "+5 reward for successful lane change",
+        "+1 reward for smooth steering (low jerk)",
+        "-5 reward for abrupt movements"
+      ],
+      "episode_length": 500,
+      "reward_scale": 1.0
+    }
+  ]
+}

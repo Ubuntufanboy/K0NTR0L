@@ -1,0 +1,3803 @@
+[
+  {
+    "timestamp": 1767688861.5839455,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688865.2710896,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688870.0357482,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767688873.5680852,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, but the lander remains stationary."
+  },
+  {
+    "timestamp": 1767688877.1761606,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688880.4246933,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688884.0079246,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767688889.9406557,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688894.2416756,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688897.5907047,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688901.1995554,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688904.5495112,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688909.0382836,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688913.38329,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains stationary in the center of the screen, so it has not drifted far right. The success criteria requires a drift of at least 10% right past the center, which is not achieved."
+  },
+  {
+    "timestamp": 1767688916.941482,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688920.267624,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688923.6037817,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688928.2343106,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767688931.6161351,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center line in all four frames, with no movement to the right. The success criteria requires drifting far right, which is not achieved. Therefore, both proxy rewards are zero."
+  },
+  {
+    "timestamp": 1767688935.963551,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767688940.4991133,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688943.82857,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767688947.4037597,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688951.8915377,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767688956.5138006,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688959.9398007,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688963.329737,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688966.8660903,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688970.209816,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688980.1677926,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688983.46124,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688986.9838314,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767688990.4567811,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is centered on the x-axis, so it is not drifting to the right. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767688993.8320901,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767688998.237034,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689001.814436,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689005.347372,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689008.8622785,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689012.3761349,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689015.9676652,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689019.4861867,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689022.8736622,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center line in all three frames. It has not drifted far to the right, so it does not satisfy the success criteria. The agent is not moving in the required direction."
+  },
+  {
+    "timestamp": 1767689026.1546936,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689029.403977,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689033.118645,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689036.7009737,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689039.9747818,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689043.3581665,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689046.7543921,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689050.2955534,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689053.6714895,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains centered on the x-axis, so it has not drifted far right. The agent has not achieved the success criteria."
+  },
+  {
+    "timestamp": 1767689057.098712,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689060.4927812,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689063.9338179,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689067.2628608,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689070.5197663,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The agent has not achieved the success criteria of drifting far right."
+  },
+  {
+    "timestamp": 1767689073.937105,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all four frames. It remains centered on the x-axis, so it has not drifted far right. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689077.38203,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689080.7564714,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689084.1097777,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689087.5118072,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689090.8739605,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689094.069444,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689098.5285645,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689101.9927945,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center of the screen in all four frames, indicating no drift to the right. The success criteria requires a drift of at least 10% to the right, which is not achieved. Therefore, the score is 0.0."
+  },
+  {
+    "timestamp": 1767689105.516433,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689108.7548149,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is centered on the x-axis, so it is not drifting to the right. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689112.0524497,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689121.3760297,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689124.7559593,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689129.1489427,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689133.6169505,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689138.216787,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689141.7252748,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689146.2076848,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689149.586844,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689153.0724356,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains centered on the x-axis, so it has not drifted far right. The agent fails to satisfy the success criteria as it is not moving rightward."
+  },
+  {
+    "timestamp": 1767689156.377328,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689159.7314956,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689163.0764232,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689166.6145813,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689169.9603314,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689173.4356678,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689176.753291,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689180.1366181,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689183.6726727,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is stationary in all frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689188.1383815,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689192.7020242,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689195.9279675,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689199.1514874,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689202.5513968,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689205.8982086,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689209.2718165,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689212.6281545,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains stationary in the center of the screen, so it has not drifted far right. The success criteria requires a drift of at least 10% right past the center, which is not achieved."
+  },
+  {
+    "timestamp": 1767689216.0341148,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689219.5257676,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689222.8887258,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center line in all three frames. It has not drifted to the right, so it does not satisfy the success criteria. The agent is not moving in the required direction."
+  },
+  {
+    "timestamp": 1767689226.230769,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The agent has not achieved the success criteria of drifting far right."
+  },
+  {
+    "timestamp": 1767689229.5996866,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689232.8363912,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift of the lander far right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689236.1464093,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689239.445728,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689242.7979965,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689251.243261,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689254.644847,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689258.1172457,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689261.5806475,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689264.9052606,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains at the center line, so it has not drifted far right. The agent fails to satisfy the success criteria as it is not moving rightward."
+  },
+  {
+    "timestamp": 1767689268.3775935,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689272.953377,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689276.3594737,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689280.6719012,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The agent has not achieved the success criteria of drifting far right."
+  },
+  {
+    "timestamp": 1767689283.8921454,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689287.0875998,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all four frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689290.4165435,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689293.7372413,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all four frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689298.3314552,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689301.5637355,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689305.1177757,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is stationary in all frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689309.669764,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689314.1411595,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689318.4469817,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689321.8400755,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689325.1009645,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689328.6303606,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689332.1204014,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      23,
+      24,
+      25,
+      26,
+      27
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689336.5744827,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689339.9831467,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689343.3220015,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689346.9185462,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689350.2298045,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center line in all four frames, with no movement to the right. The success criteria requires drifting far right, which is not achieved. Therefore, both proxy rewards are zero."
+  },
+  {
+    "timestamp": 1767689353.5525436,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689356.858968,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689360.3652468,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689363.874161,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689367.395565,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689377.9522672,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689381.3179042,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689384.7369547,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all four frames. It remains centered on the x-axis, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center, which is not met."
+  },
+  {
+    "timestamp": 1767689388.1595788,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689391.5301442,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689394.7752163,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689397.980986,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689401.3950078,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689406.0216846,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689410.3769383,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689413.7587967,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689417.2730143,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689420.5025754,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689425.0166595,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689429.5607426,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689432.9411008,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689437.2425332,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689440.7694151,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689444.1260839,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689447.6172106,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689451.122023,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689454.4157567,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689457.8024545,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689461.1344674,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is in the same position in all frames, indicating no drift. The success criteria requires a drift to the right, which is not achieved."
+  },
+  {
+    "timestamp": 1767689464.408765,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689468.8483741,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689473.152353,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689476.635378,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689479.8666704,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689483.2245367,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689486.5407298,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689489.8870275,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689493.3934612,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689496.6687014,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689506.0974948,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is positioned at the center of the screen in all four frames, indicating no drift to the right. The success criteria requires a drift of at least 10% to the right, which is not achieved. Therefore, the score is 0.0."
+  },
+  {
+    "timestamp": 1767689509.6144936,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689513.0746326,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains centered on the x-axis, so it has not drifted far right. The agent has not achieved the success criteria."
+  },
+  {
+    "timestamp": 1767689516.3076286,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689519.6806593,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all four frames. It remains centered on the x-axis, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center, which is not met."
+  },
+  {
+    "timestamp": 1767689523.097767,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689526.2800925,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689529.8061352,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689533.1596088,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689536.6856813,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689540.0463464,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689543.3485043,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689546.6414177,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689550.1331687,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689553.6816597,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689558.3561354,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689562.022206,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned on the left side of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689565.6922493,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all four frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689569.209329,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689572.7319875,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains centered on the x-axis, so it has not drifted far right. The agent fails to satisfy the success criteria as it is not moving rightward."
+  },
+  {
+    "timestamp": 1767689576.3626962,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is completely stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right of the center line, which is not met."
+  },
+  {
+    "timestamp": 1767689580.0173469,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all three frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689583.5063508,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689587.1906645,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It remains in the same position across all five frames, indicating no drift. Therefore, it fails to satisfy the success criteria of drifting far right."
+  },
+  {
+    "timestamp": 1767689592.0615916,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689596.7225838,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689601.5816038,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689606.225818,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, so it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689610.9819942,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction. It is stationary in all five frames, so it has not drifted far right. The success criteria requires a drift of at least 10% right past the center line, which is not achieved."
+  },
+  {
+    "timestamp": 1767689614.624936,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      0,
+      1,
+      2
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position is unchanged across all three frames. It remains centered on the x-axis, so it has not drifted far right. The agent fails to satisfy the success criteria as it is not moving rightward."
+  },
+  {
+    "timestamp": 1767689618.2722082,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  },
+  {
+    "timestamp": 1767689621.9010456,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to meet the success criteria."
+  },
+  {
+    "timestamp": 1767689625.370053,
+    "task_id": "first_task",
+    "command": "Slide far right",
+    "frame_indices": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "success_score": 0.0,
+    "proxy_scores": {
+      "proxy_1": 0.0,
+      "proxy_2": 0.0
+    },
+    "total_reward": 0.0,
+    "vlm_reasoning": "The lander is not moving in any direction, and its position remains unchanged across all five frames. It is not drifting to the right, nor is it positioned to the left of the center line. Therefore, it fails to satisfy the success criteria."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "tasks": [
+    {
+      "task_id": "first_task",
+      "command": "Slide far right",
+      "success_criteria": "Drift the lander far right",
+      "proxy_rewards": [
+        "+100 for every 10% right past the center x coordinate the lander is",
+        "-500 for being left of the center line"
+      ],
+      "episode_length": 1000,
+      "reward_scale": 1.0
+    }
+  ]
+}

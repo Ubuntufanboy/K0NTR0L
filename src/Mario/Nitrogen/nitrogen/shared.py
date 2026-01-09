@@ -1,0 +1,10 @@
+from pathlib import Path
+
+BUTTON_ACTION_TOKENS = [
+    'BACK', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT', 'DPAD_UP', 'EAST', 'GUIDE', 
+    'LEFT_SHOULDER', 'LEFT_THUMB', 'LEFT_TRIGGER', 'NORTH', 'RIGHT_BOTTOM', 'RIGHT_LEFT', 
+    'RIGHT_RIGHT', 'RIGHT_SHOULDER', 'RIGHT_THUMB', 'RIGHT_TRIGGER', 'RIGHT_UP', 'SOUTH', 
+    'START', 'WEST'
+]
+
+PATH_REPO = Path(__file__).parent.parent.resolve()
