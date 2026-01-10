@@ -1,5 +1,6 @@
-.pt
-.png
+mario_imitation.pt
+*.png
+*.pt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

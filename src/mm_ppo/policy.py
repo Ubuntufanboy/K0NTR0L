@@ -13,17 +13,17 @@ logger = logging.getLogger(__name__)
 
 
 class PolicyNetwork(nn.Module):
-    """Policy network (Actor) for PPO with attention-based fusion"""
+    """Policy network (Actor) with GRU backbone"""
     
     def __init__(self, 
                  input_dim: int,
                  action_dim: int,
                  text_dim: int,
                  vision_dim: int,
-                 sensor_dim: int,
-                 hidden_dims: list = [1024, 512],
+                 sensor_dim: int, # Kept for API compatibility, but ignored
+                 hidden_dims: list = [1024], # Kept for API compatibility
                  continuous: bool = False,
-                 n_heads: int = 4):
+                 n_heads: int = 4): # Kept for API compatibility
         super().__init__()
         
         self.continuous = continuous
@@ -31,85 +31,74 @@ class PolicyNetwork(nn.Module):
         
         self.text_dim = text_dim
         self.vision_dim = vision_dim
-        self.sensor_dim = sensor_dim
         
-        # Attention layer
-        self.attention_in_dim = self.vision_dim + self.sensor_dim
-        self.attention = nn.MultiheadAttention(
-            embed_dim=self.attention_in_dim, 
-            num_heads=n_heads,
-            kdim=self.text_dim,
-            vdim=self.text_dim,
+        # GRU Backbone
+        # Input is Text + Vision
+        self.gru_input_dim = text_dim + vision_dim
+        self.hidden_dim = 1024
+        self.num_layers = 2
+        
+        self.gru = nn.GRU(
+            input_size=self.gru_input_dim,
+            hidden_size=self.hidden_dim,
+            num_layers=self.num_layers,
             batch_first=True
         )
         
-        # Build MLP
-        layers = []
-        prev_dim = self.attention_in_dim  # Input to MLP is the output of attention
-        
-        for hidden_dim in hidden_dims:
-            layers.extend([
-                nn.Linear(prev_dim, hidden_dim),
-                nn.LayerNorm(hidden_dim),
-                nn.ReLU(),
-                nn.Dropout(0.1)
-            ])
-            prev_dim = hidden_dim
-        
-        self.backbone = nn.Sequential(*layers)
-        
+        # Heads
         if continuous:
-            # Output mean and log_std for continuous actions
-            self.mean_head = nn.Linear(prev_dim, action_dim)
-            self.log_std_head = nn.Linear(prev_dim, action_dim)
+            self.mean_head = nn.Linear(self.hidden_dim, action_dim)
+            self.log_std_head = nn.Linear(self.hidden_dim, action_dim)
         else:
-            # Output logits for discrete actions
-            self.action_head = nn.Linear(prev_dim, action_dim)
+            self.action_head = nn.Linear(self.hidden_dim, action_dim)
         
         # Initialize weights
         self.apply(self._init_weights)
         
-        logger.info(f"Attention Policy network initialized: "
-                   f"({vision_dim}+{sensor_dim}) attention over {text_dim} -> "
-                   f"{hidden_dims} -> {action_dim} "
-                   f"({'continuous' if continuous else 'discrete'})")
+        logger.info(f"GRU Policy network initialized: "
+                   f"Vision({vision_dim}) + Text({text_dim}) -> "
+                   f"GRU({self.hidden_dim}, {self.num_layers} layers) -> {action_dim}")
     
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):
             nn.init.orthogonal_(m.weight, gain=np.sqrt(2))
             nn.init.constant_(m.bias, 0.0)
     
-    def forward(self, x):
-        # Split input into modalities
-        text_emb = x[:, :self.text_dim]
-        vision_emb = x[:, self.text_dim : self.text_dim + self.vision_dim]
-        sensor_emb = x[:, self.text_dim + self.vision_dim:]
+    def forward(self, x, hidden=None):
+        # x shape: (Batch, Seq, Dim) or (Batch, Dim)
         
-        # Prepare for attention
-        query = torch.cat([vision_emb, sensor_emb], dim=1).unsqueeze(1) # (B, 1, V+S)
-        key = value = text_emb.unsqueeze(1) # (B, 1, T)
+        # If input is (Batch, Dim), unsqueeze to (Batch, 1, Dim)
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
         
-        # Apply attention
-        fused_emb, _ = self.attention(query, key, value) # (B, 1, V+S)
-        fused_emb = fused_emb.squeeze(1) # (B, V+S)
+        # Split input and ignore sensor data
+        # Assuming x is [Text | Vision | Sensor]
+        text_emb = x[:, :, :self.text_dim]
+        vision_emb = x[:, :, self.text_dim : self.text_dim + self.vision_dim]
+        # sensor_emb = x[:, :, self.text_dim + self.vision_dim:] # Ignored
         
-        # Pass through backbone
-        features = self.backbone(fused_emb)
+        # Concatenate Text + Vision
+        gru_input = torch.cat([text_emb, vision_emb], dim=-1)
+        
+        # Pass through GRU
+        output, new_hidden = self.gru(gru_input, hidden)
+        
+        # Output shape: (Batch, Seq, Hidden)
         
         if self.continuous:
-            mean = self.mean_head(features)
-            log_std = self.log_std_head(features)
-            log_std = torch.clamp(log_std, -20, 2)  # Stability
-            return mean, log_std
+            mean = self.mean_head(output)
+            log_std = self.log_std_head(output)
+            log_std = torch.clamp(log_std, -20, 2)
+            return mean, log_std, new_hidden
         else:
-            logits = self.action_head(features)
-            return logits
+            logits = self.action_head(output)
+            return logits, new_hidden
     
-    def get_action_and_log_prob(self, x, deterministic=False):
+    def get_action_and_log_prob(self, x, hidden=None, deterministic=False):
         """Sample action and return log probability"""
         
         if self.continuous:
-            mean, log_std = self.forward(x)
+            mean, log_std, new_hidden = self.forward(x, hidden)
             std = log_std.exp()
             
             if deterministic:
@@ -122,9 +111,9 @@ class PolicyNetwork(nn.Module):
             dist = Normal(mean, std)
             log_prob = dist.log_prob(action).sum(dim=-1)
             
-            return action, log_prob
+            return action, log_prob, new_hidden
         else:
-            logits = self.forward(x)
+            logits, new_hidden = self.forward(x, hidden)
             dist = Categorical(logits=logits)
             
             if deterministic:
@@ -134,20 +123,20 @@ class PolicyNetwork(nn.Module):
             
             log_prob = dist.log_prob(action)
             
-            return action, log_prob
+            return action, log_prob, new_hidden
     
-    def evaluate_actions(self, x, actions):
+    def evaluate_actions(self, x, actions, hidden=None):
         """Evaluate log probability and entropy of actions"""
         
         if self.continuous:
-            mean, log_std = self.forward(x)
+            mean, log_std, _ = self.forward(x, hidden)
             std = log_std.exp()
             dist = Normal(mean, std)
             
             log_prob = dist.log_prob(actions).sum(dim=-1)
             entropy = dist.entropy().sum(dim=-1)
         else:
-            logits = self.forward(x)
+            logits, _ = self.forward(x, hidden)
             dist = Categorical(logits=logits)
             
             log_prob = dist.log_prob(actions)
@@ -222,15 +211,15 @@ class ActorCritic(nn.Module):
         
         self.continuous = continuous
     
-    def get_action(self, obs, deterministic=False):
+    def get_action(self, obs, hidden=None, deterministic=False):
         """Get action from observation"""
-        action, log_prob = self.policy.get_action_and_log_prob(obs, deterministic)
+        action, log_prob, new_hidden = self.policy.get_action_and_log_prob(obs, hidden, deterministic)
         value = self.value(obs)
-        return action, log_prob, value
+        return action, log_prob, value, new_hidden
     
-    def evaluate(self, obs, actions):
+    def evaluate(self, obs, actions, hidden=None):
         """Evaluate actions"""
-        log_prob, entropy = self.policy.evaluate_actions(obs, actions)
+        log_prob, entropy = self.policy.evaluate_actions(obs, actions, hidden)
         value = self.value(obs)
         return log_prob, entropy, value
     

@@ -182,6 +182,12 @@ class MultiModalEnvWrapper:
         default_frame_shape = (600, 600, 3)
 
         try:
+            # Check for direct screen access (nes_py/gym-super-mario-bros)
+            if hasattr(self.env.unwrapped, 'screen'):
+                frame = self.env.unwrapped.screen
+                if frame is not None:
+                    return frame.copy()
+
             # Gymnasium/Gym API: render() returns the frame directly
             frame = self.env.render()
             
