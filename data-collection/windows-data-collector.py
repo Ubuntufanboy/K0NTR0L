@@ -20,7 +20,7 @@ import mss
 import numpy as np
 from PIL import Image
 
-# --- VIRTUAL CONTROLLER LIBRARY (NEW) ---
+# --- VIRTUAL CONTROLLER LIBRARY ---
 try:
     import vgamepad as vg
 except ImportError:
@@ -41,7 +41,15 @@ except Exception:
     pass
 
 # ==========================================
-#  XINPUT STRUCTURES (GLOBAL SCOPE)
+#  CONFIGURATION & CONSTANTS
+# ==========================================
+
+# XInput standard deadzones are usually around 7849 for sticks
+DEADZONE_STICK = 6000     # ~18% Deadzone to be safe against drift
+DEADZONE_TRIGGER = 30     # ~12% Trigger deadzone (0-255)
+
+# ==========================================
+#  XINPUT STRUCTURES
 # ==========================================
 
 class XINPUT_GAMEPAD(ctypes.Structure):
@@ -60,8 +68,6 @@ class XINPUT_STATE(ctypes.Structure):
 class XInputWrapper:
     def __init__(self):
         self.xinput = None
-        
-        # Try loading XInput 1.4, then 1.3, then 9.1.0 (broad compatibility)
         lib_names = ['xinput1_4.dll', 'xinput1_3.dll', 'xinput9_1_0.dll']
         for lib in lib_names:
             try:
@@ -72,23 +78,17 @@ class XInputWrapper:
                 continue
         
     def get_state(self, index):
-        """Retrieves the state of the controller at a specific index (0-3)."""
-        if not self.xinput:
-            return None
-
+        if not self.xinput: return None
         state = XINPUT_STATE()
         try:
-            # XInputGetState returns 0 (ERROR_SUCCESS) if connected
-            res = self.xinput.XInputGetState(index, ctypes.byref(state))
-            if res == 0:
+            if self.xinput.XInputGetState(index, ctypes.byref(state)) == 0:
                 return state.Gamepad
         except Exception:
             pass
-            
         return None
 
 # ==========================================
-#  WORKER THREAD
+#  WORKER THREAD (UPLOAD)
 # ==========================================
 
 class UploadThread(QThread):
@@ -104,7 +104,6 @@ class UploadThread(QThread):
     def run(self):
         img_tmp_path = None
         csv_tmp_path = None
-        
         try:
             # 1. Stitch Images
             grid_size = 14
@@ -139,7 +138,6 @@ class UploadThread(QThread):
             ]
             
             result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
-
             if result.returncode == 0:
                 self.upload_finished.emit(True, result.stdout)
             else:
@@ -147,14 +145,11 @@ class UploadThread(QThread):
 
         except Exception as e:
             self.upload_finished.emit(False, str(e))
-            
         finally:
             for p in [img_tmp_path, csv_tmp_path]:
                 if p and os.path.exists(p):
-                    try:
-                        os.unlink(p)
-                    except OSError:
-                        pass
+                    try: os.unlink(p)
+                    except OSError: pass
 
 # ==========================================
 #  GUI CLASSES
@@ -187,26 +182,21 @@ class WindowSelector(QDialog):
         self.selected_window = None
         
         layout = QVBoxLayout()
-        
-        # List Widget
         self.window_list = QListWidget()
         self.window_list.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
         layout.addWidget(self.window_list)
         
-        # Refresh Button
         self.refresh_btn = QPushButton("Refresh List ⟳")
         self.refresh_btn.setStyleSheet("background-color: #444; color: white; font-weight: bold; padding: 5px;")
         self.refresh_btn.clicked.connect(self.populate_windows)
         layout.addWidget(self.refresh_btn)
 
-        # Preview Area
         self.preview_label = QLabel()
         self.preview_label.setFixedSize(400, 300)
         self.preview_label.setStyleSheet("border: 1px solid #333; background-color: #000;")
         self.preview_label.setScaledContents(True)
         layout.addWidget(self.preview_label)
 
-        # Action Buttons
         btn_layout = QHBoxLayout()
         self.preview_btn = QPushButton("Preview")
         self.preview_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
@@ -226,11 +216,9 @@ class WindowSelector(QDialog):
 
     def populate_windows(self):
         self.window_list.clear()
-        
         def enum_cb(hwnd, windows):
             if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd):
                 windows.append((hwnd, win32gui.GetWindowText(hwnd)))
-        
         windows = []
         win32gui.EnumWindows(enum_cb, windows)
         for hwnd, title in sorted(windows, key=lambda x: x[1].lower()):
@@ -239,41 +227,33 @@ class WindowSelector(QDialog):
     def preview_window(self):
         selected = self.window_list.currentItem()
         if not selected: return
-        
         try:
             wid = int(selected.text().split("ID: ")[1].rstrip(")"))
             rect = win32gui.GetWindowRect(wid)
-            
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2] - rect[0]), int(rect[3] - rect[1])
-            
-            if w <= 0 or h <= 0:
-                QMessageBox.warning(self, "Error", "Window is minimized or invalid.")
-                return
+            if w <= 0 or h <= 0: return
 
             with mss.mss() as sct:
                 monitor = {'top': y, 'left': x, 'width': w, 'height': h}
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb)
-                
                 img.thumbnail((400, 300), Image.LANCZOS)
                 data = io.BytesIO()
                 img.save(data, format='PNG')
                 pixmap = QPixmap()
                 pixmap.loadFromData(data.getvalue())
                 self.preview_label.setPixmap(pixmap)
-                
                 self.selected_window = {'id': wid, 'x': x, 'y': y, 'width': w, 'height': h}
                 self.ok_btn.setEnabled(True)
-        except Exception as e:
-            QMessageBox.warning(self, "Preview Error", f"Could not preview: {e}")
+        except Exception: pass
 
 # ==========================================
 #  MAIN COLLECTOR
 # ==========================================
 
 class DataCollector(QMainWindow):
-    input_event_signal = pyqtSignal(str, bool) 
+    input_event_signal = pyqtSignal(str, bool)
 
     def __init__(self):
         super().__init__()
@@ -296,19 +276,19 @@ class DataCollector(QMainWindow):
         self.last_input_time = 0
         self.idle_threshold = 5.0
         self.active_uploads = []
-        self.controller_index = None # Holds the index of the REAL controller
+        self.controller_index = None 
 
-        # XInput Setup
+        # XInput & Virtual Controller
         self.xinput = XInputWrapper()
-        
-        # Virtual Controller Setup (ViGEm)
-        print("Initializing Virtual Controller...")
-        self.virtual_gamepad = vg.VX360Gamepad()
-        print("Virtual Controller Created.")
+        try:
+            self.virtual_gamepad = vg.VX360Gamepad()
+            print("Virtual Controller Initialized.")
+        except Exception as e:
+            print(f"Failed to init virtual controller: {e}")
+            sys.exit(1)
 
         self.init_ui()
         self.select_window()
-        
         if self.selected_window:
             self.setup_collectors()
         else:
@@ -360,54 +340,30 @@ class DataCollector(QMainWindow):
     def setup_collectors(self):
         self.kb_listener = keyboard.Listener(on_press=self.on_kb_press, on_release=self.on_kb_release)
         self.kb_listener.start()
-
         self.mouse_listener = mouse.Listener(on_click=self.on_mouse_click)
         self.mouse_listener.start()
-
+        
         self.screenshot_timer = QTimer()
         self.screenshot_timer.timeout.connect(self.capture_frame)
-        self.screenshot_timer.start(125) 
-
+        self.screenshot_timer.start(125)
         self.input_event_signal.connect(self.handle_input_event)
 
-    # --- INPUT HANDLERS ---
-    
     def is_target_window_active(self):
         return win32gui.GetForegroundWindow() == self.selected_window['id']
 
     def on_kb_press(self, key):
-        try:
-            if self.is_target_window_active():
-                k = key.char if hasattr(key, 'char') else str(key)
-                self.input_event_signal.emit(f"Key_{k}", True)
-        except: pass
+        if self.is_target_window_active():
+            k = key.char if hasattr(key, 'char') else str(key)
+            self.input_event_signal.emit(f"Key_{k}", True)
 
     def on_kb_release(self, key):
-        try:
-            k = key.char if hasattr(key, 'char') else str(key)
-            self.input_event_signal.emit(f"Key_{k}", False)
-        except: pass
+        k = key.char if hasattr(key, 'char') else str(key)
+        self.input_event_signal.emit(f"Key_{k}", False)
 
     def on_mouse_click(self, x, y, button, pressed):
-        try:
-            hwnd_under_mouse = win32gui.WindowFromPoint((x, y))
-            
-            is_correct_window = False
-            if hwnd_under_mouse == self.selected_window['id']:
-                is_correct_window = True
-            else:
-                parent = hwnd_under_mouse
-                while parent:
-                    parent = win32gui.GetParent(parent)
-                    if parent == self.selected_window['id']:
-                        is_correct_window = True
-                        break
-
-            if is_correct_window:
-                btn_str = str(button).replace('Button.', 'Mouse')
-                self.input_event_signal.emit(btn_str, pressed)
-        except Exception:
-            pass
+        if self.is_target_window_active():
+            btn_str = str(button).replace('Button.', 'Mouse')
+            self.input_event_signal.emit(btn_str, pressed)
 
     def handle_input_event(self, key_name, is_press):
         if is_press:
@@ -420,73 +376,94 @@ class DataCollector(QMainWindow):
             if key_name in self.active_keys:
                 self.active_keys.remove(key_name)
 
-    def find_active_controller(self):
-        """Scans slots 0-3 to find the first connected real controller."""
-        for i in range(4):
-            state = self.xinput.get_state(i)
-            if state:
-                return i
-        return None
+    # --- FILTERING & DEADZONES ---
 
-    def update_virtual_controller(self, gp_state):
-        """Passes the real controller state to the virtual one."""
-        # Reset report
-        self.virtual_gamepad.reset()
+    def apply_deadzone_stick(self, val):
+        """Returns 0 if within deadzone, else returns original value."""
+        if abs(val) < DEADZONE_STICK:
+            return 0
+        return val
+
+    def apply_deadzone_trigger(self, val):
+        """Returns 0 if within deadzone, else returns original value."""
+        if val < DEADZONE_TRIGGER:
+            return 0
+        return val
+
+    def update_virtual_controller(self, buttons, lx, ly, rx, ry, lt, rt):
+        """Pushes filtered values to the virtual controller."""
+        self.virtual_gamepad.reset() # Start clean
         
-        # Copy buttons directly (bitmask is identical)
-        self.virtual_gamepad.report.wButtons = gp_state.wButtons
+        # Explicitly cast to int to avoid ctypes confusion
+        self.virtual_gamepad.report.wButtons = int(buttons)
+        self.virtual_gamepad.report.sThumbLX = int(lx)
+        self.virtual_gamepad.report.sThumbLY = int(ly)
+        self.virtual_gamepad.report.sThumbRX = int(rx)
+        self.virtual_gamepad.report.sThumbRY = int(ry)
+        self.virtual_gamepad.report.bLeftTrigger = int(lt)
+        self.virtual_gamepad.report.bRightTrigger = int(rt)
         
-        # Copy Axis and Triggers
-        self.virtual_gamepad.report.bLeftTrigger = gp_state.bLeftTrigger
-        self.virtual_gamepad.report.bRightTrigger = gp_state.bRightTrigger
-        self.virtual_gamepad.report.sThumbLX = gp_state.sThumbLX
-        self.virtual_gamepad.report.sThumbLY = gp_state.sThumbLY
-        self.virtual_gamepad.report.sThumbRX = gp_state.sThumbRX
-        self.virtual_gamepad.report.sThumbRY = gp_state.sThumbRY
-        
-        # Push update
         self.virtual_gamepad.update()
 
     def capture_frame(self):
         # 1. Controller Discovery
         if self.controller_index is None:
-            found_idx = self.find_active_controller()
-            if found_idx is not None:
-                self.controller_index = found_idx
-                self.info_label.setText(f"Controller: Connected (Slot {found_idx})")
-            else:
-                self.info_label.setText("Controller: Searching...")
-                # We can't do anything else if no controller
-                return
+            for i in range(4):
+                if self.xinput.get_state(i):
+                    self.controller_index = i
+                    self.info_label.setText(f"Controller: Connected (Slot {i})")
+                    break
+        
+        # 2. Read & Filter Input
+        gamepad = self.xinput.get_state(self.controller_index) if self.controller_index is not None else None
+        
+        f_buttons = 0
+        f_lx = f_ly = f_rx = f_ry = 0
+        f_lt = f_rt = 0
 
-        # 2. Get State
-        gamepad = self.xinput.get_state(self.controller_index)
+        if gamepad:
+            # Apply Deadzones
+            f_buttons = gamepad.wButtons
+            f_lx = self.apply_deadzone_stick(gamepad.sThumbLX)
+            f_ly = self.apply_deadzone_stick(gamepad.sThumbLY)
+            f_rx = self.apply_deadzone_stick(gamepad.sThumbRX)
+            f_ry = self.apply_deadzone_stick(gamepad.sThumbRY)
+            f_lt = self.apply_deadzone_trigger(gamepad.bLeftTrigger)
+            f_rt = self.apply_deadzone_trigger(gamepad.bRightTrigger)
 
-        if not gamepad:
-            # Lost connection
-            self.controller_index = None
-            self.info_label.setText("Controller: Lost Connection")
-            return
+            # Update Virtual Controller (Mirroring)
+            self.update_virtual_controller(f_buttons, f_lx, f_ly, f_rx, f_ry, f_lt, f_rt)
+        else:
+            # If no controller, ensure virtual one is zeroed out
+            self.virtual_gamepad.reset()
+            self.virtual_gamepad.update()
+            if self.controller_index is not None:
+                self.info_label.setText("Controller: Lost Connection")
+                self.controller_index = None
 
-        # 3. Update Virtual Controller (Passthrough)
-        self.update_virtual_controller(gamepad)
+        # 3. Check for Activity (using filtered values)
+        has_analog_input = (abs(f_lx) > 0 or abs(f_ly) > 0 or 
+                            abs(f_rx) > 0 or abs(f_ry) > 0 or 
+                            f_lt > 0 or f_rt > 0)
+        
+        if f_buttons > 0 or has_analog_input:
+            self.last_input_time = time.time()
+            if not self.is_collecting:
+                self.is_collecting = True
+                self.status_label.setText("Status: Collecting")
 
-        # 4. Activity Check (for recording start/stop)
+        # 4. Idle Check
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
             self.active_keys.clear()
 
-        # Check wake-up activity
+        # If not collecting, stop here
         if not self.is_collecting:
-            if gamepad and (gamepad.wButtons > 0 or abs(gamepad.sThumbLX) > 4000):
-                 self.is_collecting = True
-                 self.status_label.setText("Status: Collecting")
-            else:
-                return
+            return
 
         try:
-            # Button Map Analysis (for CSV)
+            # 5. Process Buttons for CSV
             button_map = {
                 0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
                 0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
@@ -494,22 +471,16 @@ class DataCollector(QMainWindow):
                 0x0040: 'L3', 0x0080: 'R3'
             }
             
-            found_activity = False
             for mask, name in button_map.items():
-                if gamepad.wButtons & mask:
+                if f_buttons & mask:
                     self.active_keys.add(name)
-                    found_activity = True
                 elif name in self.active_keys:
                     self.active_keys.remove(name)
-            
-            if found_activity or abs(gamepad.sThumbLX) > 2000 or abs(gamepad.bRightTrigger) > 10:
-                self.last_input_time = time.time()
 
-            # 5. Capture Screen
+            # 6. Capture Screen
             rect = win32gui.GetWindowRect(self.selected_window['id'])
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2]-rect[0]), int(rect[3]-rect[1])
-            
             if w <= 0 or h <= 0: return
 
             with mss.mss() as sct:
@@ -517,25 +488,22 @@ class DataCollector(QMainWindow):
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb).resize((256, 256), Image.LANCZOS)
 
-            # 6. Analog Data Format
+            # 7. Format Data
             analog_parts = []
-            
-            # Mouse
             mx, my = win32api.GetCursorPos()
             if self.is_target_window_active():
                 analog_parts.append(f"MX:{mx - x}")
                 analog_parts.append(f"MY:{my - y}")
 
-            # Controller Data
-            def norm_axis(val):
-                return val / 32768.0
-            
-            if abs(gamepad.sThumbLX) > 3000: analog_parts.append(f"LX:{norm_axis(gamepad.sThumbLX):.2f}")
-            if abs(gamepad.sThumbLY) > 3000: analog_parts.append(f"LY:{norm_axis(gamepad.sThumbLY):.2f}")
-            if abs(gamepad.sThumbRX) > 3000: analog_parts.append(f"RX:{norm_axis(gamepad.sThumbRX):.2f}")
-            if abs(gamepad.sThumbRY) > 3000: analog_parts.append(f"RY:{norm_axis(gamepad.sThumbRY):.2f}")
-            if gamepad.bLeftTrigger > 10: analog_parts.append(f"LT:{gamepad.bLeftTrigger/255.0:.2f}")
-            if gamepad.bRightTrigger > 10: analog_parts.append(f"RT:{gamepad.bRightTrigger/255.0:.2f}")
+            def norm(val): return val / 32768.0
+            def norm_trig(val): return val / 255.0
+
+            if f_lx: analog_parts.append(f"LX:{norm(f_lx):.2f}")
+            if f_ly: analog_parts.append(f"LY:{norm(f_ly):.2f}")
+            if f_rx: analog_parts.append(f"RX:{norm(f_rx):.2f}")
+            if f_ry: analog_parts.append(f"RY:{norm(f_ry):.2f}")
+            if f_lt: analog_parts.append(f"LT:{norm_trig(f_lt):.2f}")
+            if f_rt: analog_parts.append(f"RT:{norm_trig(f_rt):.2f}")
 
             keys_str = "+".join(sorted(self.active_keys)) if self.active_keys else "None"
             analog_str = ";".join(analog_parts)
@@ -561,11 +529,10 @@ class DataCollector(QMainWindow):
     def trigger_upload(self):
         frames = list(self.frames_buffer)
         dataset = list(self.data_buffer)
-        
         self.frames_buffer.clear()
         self.data_buffer.clear()
         self.buffer_label.setText(f"Buffer: 0/{self.batch_size}")
-
+        
         worker = UploadThread(frames, dataset, self.api_key, self.server_url)
         worker.upload_finished.connect(self.on_upload_finished)
         self.active_uploads.append(worker)
