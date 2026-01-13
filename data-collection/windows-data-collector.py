@@ -175,7 +175,7 @@ class WindowSelector(QDialog):
         refresh.clicked.connect(self.populate_windows)
         layout.addWidget(refresh)
 
-        self.ok_btn = QPushButton("Select & Start Spy")
+        self.ok_btn = QPushButton("Select & Start Recording")
         self.ok_btn.setStyleSheet("background-color: #006600; color: white; padding: 10px;")
         self.ok_btn.clicked.connect(self.accept_selection)
         layout.addWidget(self.ok_btn)
