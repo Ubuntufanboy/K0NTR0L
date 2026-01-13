@@ -20,6 +20,13 @@ import mss
 import numpy as np
 from PIL import Image
 
+# --- VIRTUAL CONTROLLER LIBRARY (NEW) ---
+try:
+    import vgamepad as vg
+except ImportError:
+    print("ERROR: Missing 'vgamepad'. Install it via: pip install vgamepad")
+    sys.exit(1)
+
 # --- GUI LIBRARIES ---
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QPushButton, QLabel, QLineEdit,
@@ -53,7 +60,6 @@ class XINPUT_STATE(ctypes.Structure):
 class XInputWrapper:
     def __init__(self):
         self.xinput = None
-        self.connected = False
         
         # Try loading XInput 1.4, then 1.3, then 9.1.0 (broad compatibility)
         lib_names = ['xinput1_4.dll', 'xinput1_3.dll', 'xinput9_1_0.dll']
@@ -65,20 +71,20 @@ class XInputWrapper:
             except Exception:
                 continue
         
-    def get_state(self, index=0):
+    def get_state(self, index):
+        """Retrieves the state of the controller at a specific index (0-3)."""
         if not self.xinput:
             return None
 
         state = XINPUT_STATE()
         try:
+            # XInputGetState returns 0 (ERROR_SUCCESS) if connected
             res = self.xinput.XInputGetState(index, ctypes.byref(state))
             if res == 0:
-                self.connected = True
                 return state.Gamepad
         except Exception:
             pass
             
-        self.connected = False
         return None
 
 # ==========================================
@@ -187,7 +193,7 @@ class WindowSelector(QDialog):
         self.window_list.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
         layout.addWidget(self.window_list)
         
-        # Refresh Button (NEW)
+        # Refresh Button
         self.refresh_btn = QPushButton("Refresh List ⟳")
         self.refresh_btn.setStyleSheet("background-color: #444; color: white; font-weight: bold; padding: 5px;")
         self.refresh_btn.clicked.connect(self.populate_windows)
@@ -219,7 +225,7 @@ class WindowSelector(QDialog):
         self.populate_windows()
 
     def populate_windows(self):
-        self.window_list.clear() # Clear existing items
+        self.window_list.clear()
         
         def enum_cb(hwnd, windows):
             if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd):
@@ -290,10 +296,16 @@ class DataCollector(QMainWindow):
         self.last_input_time = 0
         self.idle_threshold = 5.0
         self.active_uploads = []
+        self.controller_index = None # Holds the index of the REAL controller
 
         # XInput Setup
         self.xinput = XInputWrapper()
         
+        # Virtual Controller Setup (ViGEm)
+        print("Initializing Virtual Controller...")
+        self.virtual_gamepad = vg.VX360Gamepad()
+        print("Virtual Controller Created.")
+
         self.init_ui()
         self.select_window()
         
@@ -408,52 +420,92 @@ class DataCollector(QMainWindow):
             if key_name in self.active_keys:
                 self.active_keys.remove(key_name)
 
+    def find_active_controller(self):
+        """Scans slots 0-3 to find the first connected real controller."""
+        for i in range(4):
+            state = self.xinput.get_state(i)
+            if state:
+                return i
+        return None
+
+    def update_virtual_controller(self, gp_state):
+        """Passes the real controller state to the virtual one."""
+        # Reset report
+        self.virtual_gamepad.reset()
+        
+        # Copy buttons directly (bitmask is identical)
+        self.virtual_gamepad.report.wButtons = gp_state.wButtons
+        
+        # Copy Axis and Triggers
+        self.virtual_gamepad.report.bLeftTrigger = gp_state.bLeftTrigger
+        self.virtual_gamepad.report.bRightTrigger = gp_state.bRightTrigger
+        self.virtual_gamepad.report.sThumbLX = gp_state.sThumbLX
+        self.virtual_gamepad.report.sThumbLY = gp_state.sThumbLY
+        self.virtual_gamepad.report.sThumbRX = gp_state.sThumbRX
+        self.virtual_gamepad.report.sThumbRY = gp_state.sThumbRY
+        
+        # Push update
+        self.virtual_gamepad.update()
+
     def capture_frame(self):
+        # 1. Controller Discovery
+        if self.controller_index is None:
+            found_idx = self.find_active_controller()
+            if found_idx is not None:
+                self.controller_index = found_idx
+                self.info_label.setText(f"Controller: Connected (Slot {found_idx})")
+            else:
+                self.info_label.setText("Controller: Searching...")
+                # We can't do anything else if no controller
+                return
+
+        # 2. Get State
+        gamepad = self.xinput.get_state(self.controller_index)
+
+        if not gamepad:
+            # Lost connection
+            self.controller_index = None
+            self.info_label.setText("Controller: Lost Connection")
+            return
+
+        # 3. Update Virtual Controller (Passthrough)
+        self.update_virtual_controller(gamepad)
+
+        # 4. Activity Check (for recording start/stop)
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
             self.active_keys.clear()
 
-        # Check controller wake-up
+        # Check wake-up activity
         if not self.is_collecting:
-            gp = self.xinput.get_state(0)
-            if gp and (gp.wButtons > 0 or abs(gp.sThumbLX) > 4000):
+            if gamepad and (gamepad.wButtons > 0 or abs(gamepad.sThumbLX) > 4000):
                  self.is_collecting = True
                  self.status_label.setText("Status: Collecting")
             else:
                 return
 
         try:
-            # 1. Controller Polling
-            gamepad = self.xinput.get_state(0)
+            # Button Map Analysis (for CSV)
+            button_map = {
+                0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
+                0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
+                0x0010: 'Start', 0x0020: 'Back', 0x0100: 'LB', 0x0200: 'RB',
+                0x0040: 'L3', 0x0080: 'R3'
+            }
             
-            if self.xinput.connected:
-                self.info_label.setText("Controller: Connected (XInput)")
-            else:
-                self.info_label.setText("Controller: Not Found (Try x360ce)")
+            found_activity = False
+            for mask, name in button_map.items():
+                if gamepad.wButtons & mask:
+                    self.active_keys.add(name)
+                    found_activity = True
+                elif name in self.active_keys:
+                    self.active_keys.remove(name)
+            
+            if found_activity or abs(gamepad.sThumbLX) > 2000 or abs(gamepad.bRightTrigger) > 10:
+                self.last_input_time = time.time()
 
-            if gamepad:
-                # Button Map
-                button_map = {
-                    0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
-                    0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
-                    0x0010: 'Start', 0x0020: 'Back', 0x0100: 'LB', 0x0200: 'RB',
-                    0x0040: 'L3', 0x0080: 'R3'
-                }
-                
-                found_activity = False
-                for mask, name in button_map.items():
-                    if gamepad.wButtons & mask:
-                        self.active_keys.add(name)
-                        found_activity = True
-                    elif name in self.active_keys:
-                        self.active_keys.remove(name)
-                
-                # Activity check
-                if found_activity or abs(gamepad.sThumbLX) > 2000 or abs(gamepad.bRightTrigger) > 10:
-                    self.last_input_time = time.time()
-
-            # 2. Capture Screen
+            # 5. Capture Screen
             rect = win32gui.GetWindowRect(self.selected_window['id'])
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2]-rect[0]), int(rect[3]-rect[1])
@@ -465,7 +517,7 @@ class DataCollector(QMainWindow):
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb).resize((256, 256), Image.LANCZOS)
 
-            # 3. Analog Data
+            # 6. Analog Data Format
             analog_parts = []
             
             # Mouse
@@ -474,17 +526,16 @@ class DataCollector(QMainWindow):
                 analog_parts.append(f"MX:{mx - x}")
                 analog_parts.append(f"MY:{my - y}")
 
-            # Controller
-            if gamepad:
-                def norm_axis(val):
-                    return val / 32768.0
-                
-                if abs(gamepad.sThumbLX) > 3000: analog_parts.append(f"LX:{norm_axis(gamepad.sThumbLX):.2f}")
-                if abs(gamepad.sThumbLY) > 3000: analog_parts.append(f"LY:{norm_axis(gamepad.sThumbLY):.2f}")
-                if abs(gamepad.sThumbRX) > 3000: analog_parts.append(f"RX:{norm_axis(gamepad.sThumbRX):.2f}")
-                if abs(gamepad.sThumbRY) > 3000: analog_parts.append(f"RY:{norm_axis(gamepad.sThumbRY):.2f}")
-                if gamepad.bLeftTrigger > 10: analog_parts.append(f"LT:{gamepad.bLeftTrigger/255.0:.2f}")
-                if gamepad.bRightTrigger > 10: analog_parts.append(f"RT:{gamepad.bRightTrigger/255.0:.2f}")
+            # Controller Data
+            def norm_axis(val):
+                return val / 32768.0
+            
+            if abs(gamepad.sThumbLX) > 3000: analog_parts.append(f"LX:{norm_axis(gamepad.sThumbLX):.2f}")
+            if abs(gamepad.sThumbLY) > 3000: analog_parts.append(f"LY:{norm_axis(gamepad.sThumbLY):.2f}")
+            if abs(gamepad.sThumbRX) > 3000: analog_parts.append(f"RX:{norm_axis(gamepad.sThumbRX):.2f}")
+            if abs(gamepad.sThumbRY) > 3000: analog_parts.append(f"RY:{norm_axis(gamepad.sThumbRY):.2f}")
+            if gamepad.bLeftTrigger > 10: analog_parts.append(f"LT:{gamepad.bLeftTrigger/255.0:.2f}")
+            if gamepad.bRightTrigger > 10: analog_parts.append(f"RT:{gamepad.bRightTrigger/255.0:.2f}")
 
             keys_str = "+".join(sorted(self.active_keys)) if self.active_keys else "None"
             analog_str = ";".join(analog_parts)
