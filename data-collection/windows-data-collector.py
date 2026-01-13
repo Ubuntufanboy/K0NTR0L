@@ -9,7 +9,7 @@ import tempfile
 import ctypes
 from pathlib import Path
 
-# --- NEW INPUT LIBRARY ---
+# --- INPUT LIBRARY ---
 import pygame 
 
 # --- WINDOWS LIBRARIES ---
@@ -33,8 +33,8 @@ except ImportError:
 # --- GUI LIBRARIES ---
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QPushButton, QLabel, QLineEdit,
-                             QDialog, QListWidget, QCheckBox)
-from PyQt5.QtCore import QTimer, pyqtSignal, QThread
+                             QDialog, QListWidget, QCheckBox, QMessageBox, QProgressBar)
+from PyQt5.QtCore import QTimer, pyqtSignal, QThread, Qt
 from PyQt5.QtGui import QPixmap
 
 # --- HIGH DPI FIX ---
@@ -44,12 +44,12 @@ except Exception:
     pass
 
 # ==========================================
-#  CONFIGURATION & CONSTANTS
+#  CONFIGURATION
 # ==========================================
 
-# Standard Deadzones
-DEADZONE_STICK = 0.15      # 15% Deadzone (Pygame uses -1.0 to 1.0)
-DEADZONE_TRIGGER = 0.10    # 10% Trigger Deadzone
+SERVER_URL = "https://neurosama.jiemonlabs.help/upload"
+DEADZONE_STICK = 0.15       # Analog value must be > 0.15 to register as input
+IDLE_NOISE_GATE = 0.02      # Analog change must be > 0.02 to reset idle timer
 
 # ==========================================
 #  WORKER THREAD (UPLOAD)
@@ -58,12 +58,11 @@ DEADZONE_TRIGGER = 0.10    # 10% Trigger Deadzone
 class UploadThread(QThread):
     upload_finished = pyqtSignal(bool, str)
 
-    def __init__(self, frames, dataset, api_key, server_url):
+    def __init__(self, frames, dataset, api_key):
         super().__init__()
         self.frames = frames
         self.dataset = dataset
         self.api_key = api_key
-        self.server_url = server_url
 
     def run(self):
         img_tmp_path = None
@@ -95,7 +94,7 @@ class UploadThread(QThread):
                 '-H', f'X-API-KEY: {self.api_key}',
                 '-F', f'dataset=@{csv_tmp_path}',
                 '-F', f'images=@{img_tmp_path}',
-                self.server_url
+                SERVER_URL
             ]
             
             result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
@@ -113,22 +112,22 @@ class UploadThread(QThread):
                     except OSError: pass
 
 # ==========================================
-#  GUI CLASSES
+#  HELPER DIALOGS
 # ==========================================
 
 class APIKeyDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("API Key Required")
-        self.setStyleSheet("background-color: #000000; color: #FFFFFF;")
+        self.setStyleSheet("background-color: #000; color: #FFF;")
         layout = QVBoxLayout()
         layout.addWidget(QLabel("Enter API Key:"))
         self.api_input = QLineEdit()
-        self.api_input.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
+        self.api_input.setStyleSheet("background-color: #222; color: white; border: 1px solid #444;")
         layout.addWidget(self.api_input)
-        self.ok_btn = QPushButton("OK")
-        self.ok_btn.clicked.connect(self.accept)
-        layout.addWidget(self.ok_btn)
+        btn = QPushButton("OK")
+        btn.clicked.connect(self.accept)
+        layout.addWidget(btn)
         self.setLayout(layout)
 
     def get_api_key(self):
@@ -138,35 +137,24 @@ class WindowSelector(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Select Window")
-        self.setStyleSheet("background-color: #000000; color: #FFFFFF;")
+        self.setStyleSheet("background-color: #000; color: #FFF;")
         self.selected_window = None
         
         layout = QVBoxLayout()
         self.window_list = QListWidget()
-        self.window_list.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
+        self.window_list.setStyleSheet("background-color: #222; color: white; border: 1px solid #444;")
         layout.addWidget(self.window_list)
         
-        self.refresh_btn = QPushButton("Refresh List ⟳")
-        self.refresh_btn.clicked.connect(self.populate_windows)
-        layout.addWidget(self.refresh_btn)
+        refresh = QPushButton("Refresh List")
+        refresh.clicked.connect(self.populate_windows)
+        layout.addWidget(refresh)
 
-        self.preview_label = QLabel()
-        self.preview_label.setFixedSize(400, 300)
-        self.preview_label.setStyleSheet("border: 1px solid #333; background-color: #000;")
-        self.preview_label.setScaledContents(True)
-        layout.addWidget(self.preview_label)
-
-        btn_layout = QHBoxLayout()
-        self.preview_btn = QPushButton("Preview")
-        self.preview_btn.clicked.connect(self.preview_window)
-        self.ok_btn = QPushButton("Start Collection")
-        self.ok_btn.setStyleSheet("background-color: #006600; color: white;")
-        self.ok_btn.clicked.connect(self.accept)
-        self.ok_btn.setEnabled(False)
-        
-        btn_layout.addWidget(self.preview_btn)
-        btn_layout.addWidget(self.ok_btn)
-        layout.addLayout(btn_layout)
+        btn_box = QHBoxLayout()
+        ok_btn = QPushButton("Select")
+        ok_btn.setStyleSheet("background-color: #006600; color: white;")
+        ok_btn.clicked.connect(self.accept_selection)
+        btn_box.addWidget(ok_btn)
+        layout.addLayout(btn_box)
         
         self.setLayout(layout)
         self.populate_windows()
@@ -181,29 +169,85 @@ class WindowSelector(QDialog):
         for hwnd, title in sorted(windows, key=lambda x: x[1].lower()):
             self.window_list.addItem(f"{title} (ID: {hwnd})")
 
-    def preview_window(self):
-        selected = self.window_list.currentItem()
-        if not selected: return
-        try:
-            wid = int(selected.text().split("ID: ")[1].rstrip(")"))
-            rect = win32gui.GetWindowRect(wid)
-            x, y = int(rect[0]), int(rect[1])
-            w, h = int(rect[2] - rect[0]), int(rect[3] - rect[1])
-            if w <= 0 or h <= 0: return
+    def accept_selection(self):
+        item = self.window_list.currentItem()
+        if item:
+            try:
+                wid = int(item.text().split("ID: ")[1].rstrip(")"))
+                self.selected_window = {'id': wid}
+                self.accept()
+            except: pass
 
-            with mss.mss() as sct:
-                monitor = {'top': y, 'left': x, 'width': w, 'height': h}
-                shot = sct.grab(monitor)
-                img = Image.frombytes("RGB", shot.size, shot.rgb)
-                img.thumbnail((400, 300), Image.LANCZOS)
-                data = io.BytesIO()
-                img.save(data, format='PNG')
-                pixmap = QPixmap()
-                pixmap.loadFromData(data.getvalue())
-                self.preview_label.setPixmap(pixmap)
-                self.selected_window = {'id': wid, 'x': x, 'y': y, 'width': w, 'height': h}
-                self.ok_btn.setEnabled(True)
-        except Exception: pass
+# ==========================================
+#  MAPPING DIALOG
+# ==========================================
+
+class ControllerMapper(QDialog):
+    def __init__(self, joystick, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Map Controller Buttons")
+        self.setStyleSheet("background-color: #111; color: white;")
+        self.joystick = joystick
+        self.resize(400, 250)
+        self.mapping = {}
+        
+        # Mapping Sequence: Prompt -> Xbox Output Code
+        self.targets = [
+            ("A Button", vg.XUSB_BUTTON.XUSB_GAMEPAD_A),
+            ("B Button", vg.XUSB_BUTTON.XUSB_GAMEPAD_B),
+            ("Start Button", vg.XUSB_BUTTON.XUSB_GAMEPAD_START),
+            ("Z Trigger (Maps to LB)", vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER),
+            ("R Trigger (Maps to RB)", vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER),
+            ("C-Up (Maps to Y)", vg.XUSB_BUTTON.XUSB_GAMEPAD_Y),
+            ("C-Right (Maps to X)", vg.XUSB_BUTTON.XUSB_GAMEPAD_X)
+        ]
+        self.current_idx = 0
+        
+        layout = QVBoxLayout()
+        self.lbl_instruction = QLabel(f"PRESS BUTTON FOR:\n\n{self.targets[0][0]}")
+        self.lbl_instruction.setAlignment(Qt.AlignCenter)
+        self.lbl_instruction.setStyleSheet("font-size: 20px; font-weight: bold; color: yellow;")
+        layout.addWidget(self.lbl_instruction)
+        
+        self.progress = QProgressBar()
+        self.progress.setRange(0, len(self.targets))
+        layout.addWidget(self.progress)
+        
+        self.setLayout(layout)
+        
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.poll_input)
+        self.timer.start(50)
+        
+        self.last_buttons = [False] * 32 # Buffer for up to 32 buttons
+
+    def poll_input(self):
+        pygame.event.pump()
+        num_buttons = self.joystick.get_numbuttons()
+        
+        for i in range(num_buttons):
+            pressed = self.joystick.get_button(i)
+            # Detect Rising Edge (Press down)
+            if pressed and not self.last_buttons[i]:
+                self.map_button(i)
+                break # Only accept one button at a time
+            
+            if i < len(self.last_buttons):
+                self.last_buttons[i] = pressed
+
+    def map_button(self, physical_id):
+        target_name, xbox_code = self.targets[self.current_idx]
+        self.mapping[physical_id] = xbox_code
+        print(f"Mapped Physical ID {physical_id} -> {target_name}")
+        
+        self.current_idx += 1
+        self.progress.setValue(self.current_idx)
+        
+        if self.current_idx >= len(self.targets):
+            self.accept()
+        else:
+            self.lbl_instruction.setText(f"PRESS BUTTON FOR:\n\n{self.targets[self.current_idx][0]}")
+            self.last_buttons = [False] * 32 # Clear buffer to prevent double mapping
 
 # ==========================================
 #  MAIN COLLECTOR
@@ -214,11 +258,12 @@ class DataCollector(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Neuro Data Collector")
+        self.setWindowTitle("Neuro Data Collector v2.1")
         self.config_path = Path.home() / ".neuro_collector_config.json"
+        self.map_path = Path.home() / ".neuro_controller_map.json"
+        
         self.api_key = self.load_api_key() or self.prompt_api_key()
         if not self.api_key: sys.exit(0)
-        self.server_url = "https://neurosama.jiemonlabs.help/upload"
 
         # State
         self.selected_window = None
@@ -234,8 +279,12 @@ class DataCollector(QMainWindow):
         self.idle_threshold = 5.0
         self.active_uploads = []
         
+        # Idle Logic State
+        self.prev_axes = {} 
+        
         # Controller State
         self.joystick = None
+        self.button_map = {} # Physical ID -> Xbox Code
         pygame.init()
         pygame.joystick.init()
         
@@ -247,6 +296,9 @@ class DataCollector(QMainWindow):
             sys.exit(1)
 
         self.init_ui()
+        self.load_mapping()
+        
+        # Start Window Selection
         self.select_window()
         if self.selected_window:
             self.setup_collectors()
@@ -254,23 +306,27 @@ class DataCollector(QMainWindow):
             sys.exit(0)
 
     def init_ui(self):
-        self.setStyleSheet("background-color: #000000; color: white;")
-        self.setFixedSize(450, 250)
+        self.setStyleSheet("background-color: #111; color: white;")
+        self.setFixedSize(500, 320)
         central = QWidget()
         self.setCentralWidget(central)
         layout = QVBoxLayout()
         
         self.status_label = QLabel("Status: Waiting")
-        self.status_label.setStyleSheet("color: #00FF00; font-weight: bold; font-size: 14px;")
+        self.status_label.setStyleSheet("color: #00FF00; font-weight: bold; font-size: 16px;")
         layout.addWidget(self.status_label)
         
         self.info_label = QLabel(f"Controller: Searching...")
         self.info_label.setStyleSheet("color: #AAAAAA;")
         layout.addWidget(self.info_label)
 
-        # Verification Debug Checkbox
-        self.debug_chk = QCheckBox("Show Input Verification in Console")
-        self.debug_chk.setChecked(True)
+        # Map Button
+        self.map_btn = QPushButton("Remap Controller Buttons")
+        self.map_btn.setStyleSheet("background-color: #444; padding: 10px; font-weight: bold;")
+        self.map_btn.clicked.connect(self.start_mapping)
+        layout.addWidget(self.map_btn)
+
+        self.debug_chk = QCheckBox("Show Input Debug Log")
         self.debug_chk.setStyleSheet("color: #FFCC00;")
         layout.addWidget(self.debug_chk)
 
@@ -307,151 +363,123 @@ class DataCollector(QMainWindow):
         self.mouse_listener.start()
         
         self.screenshot_timer = QTimer()
-        self.screenshot_timer.timeout.connect(self.capture_frame)
-        self.screenshot_timer.start(125)
+        self.screenshot_timer.timeout.connect(self.loop_tick)
+        self.screenshot_timer.start(100) # ~10 FPS
+        
         self.input_event_signal.connect(self.handle_input_event)
 
-    def is_target_window_active(self):
-        return win32gui.GetForegroundWindow() == self.selected_window['id']
+    # --- MAPPING & CONTROLLER ---
 
-    def on_kb_press(self, key):
-        if self.is_target_window_active():
-            k = key.char if hasattr(key, 'char') else str(key)
-            self.input_event_signal.emit(f"Key_{k}", True)
+    def load_mapping(self):
+        if self.map_path.exists():
+            try:
+                # Keys in JSON are always strings, convert back to int
+                raw = json.load(open(self.map_path))
+                self.button_map = {int(k): int(v) for k, v in raw.items()}
+                print(f"Loaded {len(self.button_map)} button mappings.")
+            except Exception as e:
+                print(f"Map load error: {e}")
 
-    def on_kb_release(self, key):
-        k = key.char if hasattr(key, 'char') else str(key)
-        self.input_event_signal.emit(f"Key_{k}", False)
-
-    def on_mouse_click(self, x, y, button, pressed):
-        if self.is_target_window_active():
-            btn_str = str(button).replace('Button.', 'Mouse')
-            self.input_event_signal.emit(btn_str, pressed)
-
-    def handle_input_event(self, key_name, is_press):
-        if is_press:
-            self.active_keys.add(key_name)
-            self.last_input_time = time.time()
-            if not self.is_collecting:
-                self.is_collecting = True
-                self.status_label.setText("Status: Collecting")
-        else:
-            if key_name in self.active_keys:
-                self.active_keys.remove(key_name)
-
-    # --- INPUT PROCESSING ---
-
-    def apply_deadzone(self, val, threshold):
-        if abs(val) < threshold:
-            return 0.0
-        return val
+    def start_mapping(self):
+        self.refresh_controllers()
+        if not self.joystick:
+            QMessageBox.warning(self, "Error", "No controller found to map!")
+            return
+            
+        dlg = ControllerMapper(self.joystick, self)
+        if dlg.exec_() == QDialog.Accepted:
+            self.button_map = dlg.mapping
+            # Save mapping
+            with open(self.map_path, 'w') as f:
+                json.dump(self.button_map, f)
+            QMessageBox.information(self, "Success", "Mapping saved!")
 
     def refresh_controllers(self):
-        """Finds any connected joystick using Pygame."""
         pygame.event.pump()
         if pygame.joystick.get_count() > 0:
             if self.joystick is None:
                 self.joystick = pygame.joystick.Joystick(0)
                 self.joystick.init()
-                name = self.joystick.get_name()
-                self.info_label.setText(f"Controller: {name}")
-                print(f"Connected to: {name}")
+                self.info_label.setText(f"Controller: {self.joystick.get_name()}")
         else:
-            if self.joystick is not None:
-                self.joystick.quit()
-                self.joystick = None
-                self.info_label.setText("Controller: Disconnected")
-                self.virtual_gamepad.reset()
-                self.virtual_gamepad.update()
+            self.joystick = None
+            self.info_label.setText("Controller: Disconnected")
 
-    def capture_frame(self):
-        # 1. Update Controller State
+    def loop_tick(self):
         self.refresh_controllers()
         
         v_buttons = 0
-        v_lx = v_ly = v_rx = v_ry = 0
-        v_lt = v_rt = 0
+        v_lx = 0
+        v_ly = 0
         
-        has_input = False
+        # Flags for idle detection
+        is_active_input = False
         
         if self.joystick:
-            pygame.event.pump() # Process internal SDL events
+            pygame.event.pump()
             
-            # --- AXIS MAPPING (Generalized) ---
-            # We assume Axis 0/1 are Left Stick, Axis 2/3 are Right Stick (or C-Buttons)
-            num_axes = self.joystick.get_numaxes()
-            
-            if num_axes >= 1: 
-                raw = self.joystick.get_axis(0)
-                v_lx = int(self.apply_deadzone(raw, DEADZONE_STICK) * 32767)
-            if num_axes >= 2: 
-                raw = self.joystick.get_axis(1)
-                v_ly = int(self.apply_deadzone(raw, DEADZONE_STICK) * -32767) # Invert Y for XInput standard
-            
-            # Map Axis 2/3 to Right Stick OR Triggers depending on controller count
-            # For N64 USB, these are often C-buttons or Z-trigger
-            if num_axes >= 3:
-                raw = self.joystick.get_axis(2)
-                v_rx = int(self.apply_deadzone(raw, DEADZONE_STICK) * 32767)
-            if num_axes >= 4:
-                raw = self.joystick.get_axis(3)
-                v_ry = int(self.apply_deadzone(raw, DEADZONE_STICK) * -32767)
+            # --- READ AXES (with Noise Gate) ---
+            raw_x = self.joystick.get_axis(0)
+            raw_y = self.joystick.get_axis(1)
 
-            # --- BUTTON MAPPING (Generalized) ---
-            # We map physical buttons 0-13 directly to Xbox buttons sequentially
-            # Xbox Button Map: A, B, X, Y, LB, RB, Back, Start, L3, R3, Guide
-            xbox_buttons = [
-                vg.XUSB_BUTTON.XUSB_GAMEPAD_A, vg.XUSB_BUTTON.XUSB_GAMEPAD_B,
-                vg.XUSB_BUTTON.XUSB_GAMEPAD_X, vg.XUSB_BUTTON.XUSB_GAMEPAD_Y,
-                vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER, vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
-                vg.XUSB_BUTTON.XUSB_GAMEPAD_BACK, vg.XUSB_BUTTON.XUSB_GAMEPAD_START,
-                vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB, vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB
-            ]
+            # Check noise gate (prevents drift from resetting idle timer)
+            prev_x = self.prev_axes.get(0, 0.0)
+            prev_y = self.prev_axes.get(1, 0.0)
+            
+            if abs(raw_x - prev_x) > IDLE_NOISE_GATE or abs(raw_y - prev_y) > IDLE_NOISE_GATE:
+                is_active_input = True
+                
+            self.prev_axes[0] = raw_x
+            self.prev_axes[1] = raw_y
+            
+            # Apply Deadzone for Virtual Output
+            if abs(raw_x) > DEADZONE_STICK:
+                v_lx = int(raw_x * 32767)
+            if abs(raw_y) > DEADZONE_STICK:
+                v_ly = int(raw_y * -32767) # Invert Y for Xbox standard
 
+            # --- READ BUTTONS (with Mapping) ---
             num_buttons = self.joystick.get_numbuttons()
-            for i in range(min(num_buttons, len(xbox_buttons))):
-                if self.joystick.get_button(i):
-                    v_buttons |= xbox_buttons[i]
-                    has_input = True
+            pressed_physical_ids = []
             
-            # --- VERIFICATION LOGGING ---
-            if self.debug_chk.isChecked() and (v_lx != 0 or v_buttons != 0):
-                print(f"[VERIFY] Physical Axes: {num_axes} | Buttons: {num_buttons}")
-                print(f"         > Out LX: {v_lx} LY: {v_ly} RX: {v_rx} RY: {v_ry}")
-                print(f"         > Out Buttons Mask: {bin(v_buttons)}")
-                print("-" * 40)
-
-            # Check for analog activity
-            if abs(v_lx) > 0 or abs(v_ly) > 0 or abs(v_rx) > 0:
-                has_input = True
-
-            # Update Virtual Controller
+            for i in range(num_buttons):
+                if self.joystick.get_button(i):
+                    pressed_physical_ids.append(i)
+                    is_active_input = True
+                    
+                    # Apply Map
+                    if i in self.button_map:
+                        v_buttons |= self.button_map[i]
+            
+            # --- UPDATE VIRTUAL CONTROLLER ---
             self.virtual_gamepad.reset()
             self.virtual_gamepad.report.wButtons = v_buttons
             self.virtual_gamepad.report.sThumbLX = v_lx
             self.virtual_gamepad.report.sThumbLY = v_ly
-            self.virtual_gamepad.report.sThumbRX = v_rx
-            self.virtual_gamepad.report.sThumbRY = v_ry
-            self.virtual_gamepad.report.bLeftTrigger = v_lt
-            self.virtual_gamepad.report.bRightTrigger = v_rt
             self.virtual_gamepad.update()
 
-        # 2. Activity / Idle Logic
-        if has_input:
+            # --- DEBUG LOG ---
+            if self.debug_chk.isChecked() and (v_buttons > 0 or abs(v_lx) > 0):
+                print(f"[DEBUG] Physical IDs: {pressed_physical_ids}")
+                print(f"        Virtual Mask: {bin(v_buttons)} | LX:{v_lx} LY:{v_ly}")
+
+        # --- IDLE LOGIC ---
+        if is_active_input or len(self.active_keys) > 0:
             self.last_input_time = time.time()
             if not self.is_collecting:
                 self.is_collecting = True
                 self.status_label.setText("Status: Collecting")
-
+        
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
             self.active_keys.clear()
+        
+        # --- CAPTURE ---
+        if self.is_collecting:
+            self.record_frame(v_lx, v_ly, v_buttons)
 
-        if not self.is_collecting:
-            return
-
-        # 3. Capture & Process (Same as before)
+    def record_frame(self, lx, ly, buttons):
         try:
             rect = win32gui.GetWindowRect(self.selected_window['id'])
             x, y = int(rect[0]), int(rect[1])
@@ -463,31 +491,26 @@ class DataCollector(QMainWindow):
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb).resize((256, 256), Image.LANCZOS)
 
-            # Record Data
             analog_parts = []
-            if v_lx: analog_parts.append(f"LX:{v_lx/32767:.2f}")
-            if v_ly: analog_parts.append(f"LY:{v_ly/32767:.2f}")
-            if v_buttons:
-                 # Helper to reverse lookup button names for CSV
-                 pass # (Simplified for brevity, raw int works for ML training)
+            if lx: analog_parts.append(f"LX:{lx/32767:.2f}")
+            if ly: analog_parts.append(f"LY:{ly/32767:.2f}")
 
             self.frames_buffer.append(np.array(img))
             self.data_buffer.append({
                 'timestamp': time.time(),
                 'frame_index': len(self.frames_buffer) - 1,
-                'keys': f"BtnMask_{v_buttons}",
+                'keys': f"BtnMask_{buttons}",
                 'analog': ";".join(analog_parts)
             })
-
+            
             self.frame_count += 1
             self.stats_label.setText(f"Frames: {self.frame_count} | Batches: {self.batch_count}")
             self.buffer_label.setText(f"Buffer: {len(self.frames_buffer)}/{self.batch_size}")
 
             if len(self.frames_buffer) >= self.batch_size:
                 self.trigger_upload()
-
         except Exception as e:
-            print(f"Loop Error: {e}")
+            print(f"Capture error: {e}")
 
     def trigger_upload(self):
         frames = list(self.frames_buffer)
@@ -496,7 +519,7 @@ class DataCollector(QMainWindow):
         self.data_buffer.clear()
         self.buffer_label.setText(f"Buffer: 0/{self.batch_size}")
         
-        worker = UploadThread(frames, dataset, self.api_key, self.server_url)
+        worker = UploadThread(frames, dataset, self.api_key, SERVER_URL)
         worker.upload_finished.connect(self.on_upload_finished)
         self.active_uploads.append(worker)
         worker.start()
@@ -507,6 +530,21 @@ class DataCollector(QMainWindow):
             print("Upload OK")
         else:
             print(f"Upload Fail: {msg}")
+
+    def on_kb_press(self, key):
+        if win32gui.GetForegroundWindow() == self.selected_window['id']:
+            self.input_event_signal.emit(f"K_{key}", True)
+
+    def on_kb_release(self, key):
+        self.input_event_signal.emit(f"K_{key}", False)
+
+    def on_mouse_click(self, x, y, button, pressed):
+        if win32gui.GetForegroundWindow() == self.selected_window['id']:
+            self.input_event_signal.emit(f"M_{button}", pressed)
+
+    def handle_input_event(self, key, pressed):
+        if pressed: self.active_keys.add(key)
+        elif key in self.active_keys: self.active_keys.remove(key)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
