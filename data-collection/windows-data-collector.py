@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import time
 import csv
@@ -258,7 +257,7 @@ class DataCollector(QMainWindow):
         self.config_path = Path.home() / ".neuro_collector_config.json"
         self.api_key = self.load_api_key() or self.prompt_api_key()
         if not self.api_key: sys.exit(0)
-        self.server_url = "https://incorporate-jpg-nutten-offered.trycloudflare.com/upload"
+        self.server_url = "https://neurosama.jiemonlabs.help/upload"
 
         # State
         self.selected_window = None
