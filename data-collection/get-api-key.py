@@ -46,3 +46,4 @@ def main():
 
 if __name__ == "__main__":
     SERVER_URL = input("DM apolloiscool on discord to get your server to autheticate and recieve your API key\n\nEnter Server URL here: ")
+    main()
