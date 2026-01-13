@@ -298,7 +298,7 @@ class DataCollector(QMainWindow):
         self.setWindowTitle("Neuro Data Collector")
         self.config_path = Path.home() / ".neuro_collector_config.json"
         self.api_key = self.load_api_key()
-        self.server_url = "https://locked-concentrate-medicines-incentives.trycloudflare.com/upload"
+        self.server_url = "https://neurosama.jiemonlabs.help/upload"
 
         if not self.api_key:
             self.api_key = self.prompt_api_key()
