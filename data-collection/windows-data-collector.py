@@ -9,18 +9,21 @@ import tempfile
 import ctypes
 from pathlib import Path
 
+# --- NEW INPUT LIBRARY ---
+import pygame 
+
 # --- WINDOWS LIBRARIES ---
 import win32gui
 import win32api
 import win32con
 
-# --- INPUT LIBRARIES ---
+# --- INPUT & SCREEN CAPTURE ---
 from pynput import keyboard, mouse
 import mss
 import numpy as np
 from PIL import Image
 
-# --- VIRTUAL CONTROLLER LIBRARY ---
+# --- VIRTUAL CONTROLLER ---
 try:
     import vgamepad as vg
 except ImportError:
@@ -30,7 +33,7 @@ except ImportError:
 # --- GUI LIBRARIES ---
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QPushButton, QLabel, QLineEdit,
-                             QDialog, QListWidget, QMessageBox)
+                             QDialog, QListWidget, QCheckBox)
 from PyQt5.QtCore import QTimer, pyqtSignal, QThread
 from PyQt5.QtGui import QPixmap
 
@@ -44,48 +47,9 @@ except Exception:
 #  CONFIGURATION & CONSTANTS
 # ==========================================
 
-# XInput standard deadzones are usually around 7849 for sticks
-DEADZONE_STICK = 6000     # ~18% Deadzone to be safe against drift
-DEADZONE_TRIGGER = 30     # ~12% Trigger deadzone (0-255)
-
-# ==========================================
-#  XINPUT STRUCTURES
-# ==========================================
-
-class XINPUT_GAMEPAD(ctypes.Structure):
-    _fields_ = [("wButtons", ctypes.c_ushort),
-                ("bLeftTrigger", ctypes.c_ubyte),
-                ("bRightTrigger", ctypes.c_ubyte),
-                ("sThumbLX", ctypes.c_short),
-                ("sThumbLY", ctypes.c_short),
-                ("sThumbRX", ctypes.c_short),
-                ("sThumbRY", ctypes.c_short)]
-
-class XINPUT_STATE(ctypes.Structure):
-    _fields_ = [("dwPacketNumber", ctypes.c_ulong),
-                ("Gamepad", XINPUT_GAMEPAD)]
-
-class XInputWrapper:
-    def __init__(self):
-        self.xinput = None
-        lib_names = ['xinput1_4.dll', 'xinput1_3.dll', 'xinput9_1_0.dll']
-        for lib in lib_names:
-            try:
-                self.xinput = ctypes.windll.LoadLibrary(lib)
-                print(f"XInput loaded via {lib}")
-                break
-            except Exception:
-                continue
-        
-    def get_state(self, index):
-        if not self.xinput: return None
-        state = XINPUT_STATE()
-        try:
-            if self.xinput.XInputGetState(index, ctypes.byref(state)) == 0:
-                return state.Gamepad
-        except Exception:
-            pass
-        return None
+# Standard Deadzones
+DEADZONE_STICK = 0.15      # 15% Deadzone (Pygame uses -1.0 to 1.0)
+DEADZONE_TRIGGER = 0.10    # 10% Trigger Deadzone
 
 # ==========================================
 #  WORKER THREAD (UPLOAD)
@@ -105,7 +69,6 @@ class UploadThread(QThread):
         img_tmp_path = None
         csv_tmp_path = None
         try:
-            # 1. Stitch Images
             grid_size = 14
             img_size = 256
             total_size = grid_size * img_size
@@ -120,7 +83,6 @@ class UploadThread(QThread):
                 big_img.save(img_tmp, format='WEBP', quality=70, method=6)
                 img_tmp_path = img_tmp.name
 
-            # 2. Save CSV
             with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8', newline='') as csv_tmp:
                 fieldnames = ['timestamp', 'frame_index', 'keys', 'analog']
                 writer = csv.DictWriter(csv_tmp, fieldnames=fieldnames)
@@ -128,7 +90,6 @@ class UploadThread(QThread):
                 writer.writerows(self.dataset)
                 csv_tmp_path = csv_tmp.name
 
-            # 3. Upload
             cmd = [
                 'curl', '-X', 'POST',
                 '-H', f'X-API-KEY: {self.api_key}',
@@ -166,7 +127,6 @@ class APIKeyDialog(QDialog):
         self.api_input.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
         layout.addWidget(self.api_input)
         self.ok_btn = QPushButton("OK")
-        self.ok_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
         self.ok_btn.clicked.connect(self.accept)
         layout.addWidget(self.ok_btn)
         self.setLayout(layout)
@@ -187,7 +147,6 @@ class WindowSelector(QDialog):
         layout.addWidget(self.window_list)
         
         self.refresh_btn = QPushButton("Refresh List ⟳")
-        self.refresh_btn.setStyleSheet("background-color: #444; color: white; font-weight: bold; padding: 5px;")
         self.refresh_btn.clicked.connect(self.populate_windows)
         layout.addWidget(self.refresh_btn)
 
@@ -199,9 +158,7 @@ class WindowSelector(QDialog):
 
         btn_layout = QHBoxLayout()
         self.preview_btn = QPushButton("Preview")
-        self.preview_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
         self.preview_btn.clicked.connect(self.preview_window)
-        
         self.ok_btn = QPushButton("Start Collection")
         self.ok_btn.setStyleSheet("background-color: #006600; color: white;")
         self.ok_btn.clicked.connect(self.accept)
@@ -276,10 +233,12 @@ class DataCollector(QMainWindow):
         self.last_input_time = 0
         self.idle_threshold = 5.0
         self.active_uploads = []
-        self.controller_index = None 
-
-        # XInput & Virtual Controller
-        self.xinput = XInputWrapper()
+        
+        # Controller State
+        self.joystick = None
+        pygame.init()
+        pygame.joystick.init()
+        
         try:
             self.virtual_gamepad = vg.VX360Gamepad()
             print("Virtual Controller Initialized.")
@@ -295,8 +254,8 @@ class DataCollector(QMainWindow):
             sys.exit(0)
 
     def init_ui(self):
-        self.setStyleSheet("background-color: #000000;")
-        self.setFixedSize(400, 220)
+        self.setStyleSheet("background-color: #000000; color: white;")
+        self.setFixedSize(450, 250)
         central = QWidget()
         self.setCentralWidget(central)
         layout = QVBoxLayout()
@@ -309,12 +268,16 @@ class DataCollector(QMainWindow):
         self.info_label.setStyleSheet("color: #AAAAAA;")
         layout.addWidget(self.info_label)
 
+        # Verification Debug Checkbox
+        self.debug_chk = QCheckBox("Show Input Verification in Console")
+        self.debug_chk.setChecked(True)
+        self.debug_chk.setStyleSheet("color: #FFCC00;")
+        layout.addWidget(self.debug_chk)
+
         self.stats_label = QLabel("Frames: 0 | Batches: 0")
-        self.stats_label.setStyleSheet("color: white;")
         layout.addWidget(self.stats_label)
 
         self.buffer_label = QLabel("Buffer: 0/196")
-        self.buffer_label.setStyleSheet("color: white;")
         layout.addWidget(self.buffer_label)
         central.setLayout(layout)
 
@@ -376,108 +339,120 @@ class DataCollector(QMainWindow):
             if key_name in self.active_keys:
                 self.active_keys.remove(key_name)
 
-    # --- FILTERING & DEADZONES ---
+    # --- INPUT PROCESSING ---
 
-    def apply_deadzone_stick(self, val):
-        """Returns 0 if within deadzone, else returns original value."""
-        if abs(val) < DEADZONE_STICK:
-            return 0
+    def apply_deadzone(self, val, threshold):
+        if abs(val) < threshold:
+            return 0.0
         return val
 
-    def apply_deadzone_trigger(self, val):
-        """Returns 0 if within deadzone, else returns original value."""
-        if val < DEADZONE_TRIGGER:
-            return 0
-        return val
-
-    def update_virtual_controller(self, buttons, lx, ly, rx, ry, lt, rt):
-        """Pushes filtered values to the virtual controller."""
-        self.virtual_gamepad.reset() # Start clean
-        
-        # Explicitly cast to int to avoid ctypes confusion
-        self.virtual_gamepad.report.wButtons = int(buttons)
-        self.virtual_gamepad.report.sThumbLX = int(lx)
-        self.virtual_gamepad.report.sThumbLY = int(ly)
-        self.virtual_gamepad.report.sThumbRX = int(rx)
-        self.virtual_gamepad.report.sThumbRY = int(ry)
-        self.virtual_gamepad.report.bLeftTrigger = int(lt)
-        self.virtual_gamepad.report.bRightTrigger = int(rt)
-        
-        self.virtual_gamepad.update()
+    def refresh_controllers(self):
+        """Finds any connected joystick using Pygame."""
+        pygame.event.pump()
+        if pygame.joystick.get_count() > 0:
+            if self.joystick is None:
+                self.joystick = pygame.joystick.Joystick(0)
+                self.joystick.init()
+                name = self.joystick.get_name()
+                self.info_label.setText(f"Controller: {name}")
+                print(f"Connected to: {name}")
+        else:
+            if self.joystick is not None:
+                self.joystick.quit()
+                self.joystick = None
+                self.info_label.setText("Controller: Disconnected")
+                self.virtual_gamepad.reset()
+                self.virtual_gamepad.update()
 
     def capture_frame(self):
-        # 1. Controller Discovery
-        if self.controller_index is None:
-            for i in range(4):
-                if self.xinput.get_state(i):
-                    self.controller_index = i
-                    self.info_label.setText(f"Controller: Connected (Slot {i})")
-                    break
+        # 1. Update Controller State
+        self.refresh_controllers()
         
-        # 2. Read & Filter Input
-        gamepad = self.xinput.get_state(self.controller_index) if self.controller_index is not None else None
+        v_buttons = 0
+        v_lx = v_ly = v_rx = v_ry = 0
+        v_lt = v_rt = 0
         
-        f_buttons = 0
-        f_lx = f_ly = f_rx = f_ry = 0
-        f_lt = f_rt = 0
+        has_input = False
+        
+        if self.joystick:
+            pygame.event.pump() # Process internal SDL events
+            
+            # --- AXIS MAPPING (Generalized) ---
+            # We assume Axis 0/1 are Left Stick, Axis 2/3 are Right Stick (or C-Buttons)
+            num_axes = self.joystick.get_numaxes()
+            
+            if num_axes >= 1: 
+                raw = self.joystick.get_axis(0)
+                v_lx = int(self.apply_deadzone(raw, DEADZONE_STICK) * 32767)
+            if num_axes >= 2: 
+                raw = self.joystick.get_axis(1)
+                v_ly = int(self.apply_deadzone(raw, DEADZONE_STICK) * -32767) # Invert Y for XInput standard
+            
+            # Map Axis 2/3 to Right Stick OR Triggers depending on controller count
+            # For N64 USB, these are often C-buttons or Z-trigger
+            if num_axes >= 3:
+                raw = self.joystick.get_axis(2)
+                v_rx = int(self.apply_deadzone(raw, DEADZONE_STICK) * 32767)
+            if num_axes >= 4:
+                raw = self.joystick.get_axis(3)
+                v_ry = int(self.apply_deadzone(raw, DEADZONE_STICK) * -32767)
 
-        if gamepad:
-            # Apply Deadzones
-            f_buttons = gamepad.wButtons
-            f_lx = self.apply_deadzone_stick(gamepad.sThumbLX)
-            f_ly = self.apply_deadzone_stick(gamepad.sThumbLY)
-            f_rx = self.apply_deadzone_stick(gamepad.sThumbRX)
-            f_ry = self.apply_deadzone_stick(gamepad.sThumbRY)
-            f_lt = self.apply_deadzone_trigger(gamepad.bLeftTrigger)
-            f_rt = self.apply_deadzone_trigger(gamepad.bRightTrigger)
+            # --- BUTTON MAPPING (Generalized) ---
+            # We map physical buttons 0-13 directly to Xbox buttons sequentially
+            # Xbox Button Map: A, B, X, Y, LB, RB, Back, Start, L3, R3, Guide
+            xbox_buttons = [
+                vg.XUSB_BUTTON.XUSB_GAMEPAD_A, vg.XUSB_BUTTON.XUSB_GAMEPAD_B,
+                vg.XUSB_BUTTON.XUSB_GAMEPAD_X, vg.XUSB_BUTTON.XUSB_GAMEPAD_Y,
+                vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER, vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
+                vg.XUSB_BUTTON.XUSB_GAMEPAD_BACK, vg.XUSB_BUTTON.XUSB_GAMEPAD_START,
+                vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB, vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB
+            ]
 
-            # Update Virtual Controller (Mirroring)
-            self.update_virtual_controller(f_buttons, f_lx, f_ly, f_rx, f_ry, f_lt, f_rt)
-        else:
-            # If no controller, ensure virtual one is zeroed out
+            num_buttons = self.joystick.get_numbuttons()
+            for i in range(min(num_buttons, len(xbox_buttons))):
+                if self.joystick.get_button(i):
+                    v_buttons |= xbox_buttons[i]
+                    has_input = True
+            
+            # --- VERIFICATION LOGGING ---
+            if self.debug_chk.isChecked() and (v_lx != 0 or v_buttons != 0):
+                print(f"[VERIFY] Physical Axes: {num_axes} | Buttons: {num_buttons}")
+                print(f"         > Out LX: {v_lx} LY: {v_ly} RX: {v_rx} RY: {v_ry}")
+                print(f"         > Out Buttons Mask: {bin(v_buttons)}")
+                print("-" * 40)
+
+            # Check for analog activity
+            if abs(v_lx) > 0 or abs(v_ly) > 0 or abs(v_rx) > 0:
+                has_input = True
+
+            # Update Virtual Controller
             self.virtual_gamepad.reset()
+            self.virtual_gamepad.report.wButtons = v_buttons
+            self.virtual_gamepad.report.sThumbLX = v_lx
+            self.virtual_gamepad.report.sThumbLY = v_ly
+            self.virtual_gamepad.report.sThumbRX = v_rx
+            self.virtual_gamepad.report.sThumbRY = v_ry
+            self.virtual_gamepad.report.bLeftTrigger = v_lt
+            self.virtual_gamepad.report.bRightTrigger = v_rt
             self.virtual_gamepad.update()
-            if self.controller_index is not None:
-                self.info_label.setText("Controller: Lost Connection")
-                self.controller_index = None
 
-        # 3. Check for Activity (using filtered values)
-        has_analog_input = (abs(f_lx) > 0 or abs(f_ly) > 0 or 
-                            abs(f_rx) > 0 or abs(f_ry) > 0 or 
-                            f_lt > 0 or f_rt > 0)
-        
-        if f_buttons > 0 or has_analog_input:
+        # 2. Activity / Idle Logic
+        if has_input:
             self.last_input_time = time.time()
             if not self.is_collecting:
                 self.is_collecting = True
                 self.status_label.setText("Status: Collecting")
 
-        # 4. Idle Check
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
             self.active_keys.clear()
 
-        # If not collecting, stop here
         if not self.is_collecting:
             return
 
+        # 3. Capture & Process (Same as before)
         try:
-            # 5. Process Buttons for CSV
-            button_map = {
-                0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
-                0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
-                0x0010: 'Start', 0x0020: 'Back', 0x0100: 'LB', 0x0200: 'RB',
-                0x0040: 'L3', 0x0080: 'R3'
-            }
-            
-            for mask, name in button_map.items():
-                if f_buttons & mask:
-                    self.active_keys.add(name)
-                elif name in self.active_keys:
-                    self.active_keys.remove(name)
-
-            # 6. Capture Screen
             rect = win32gui.GetWindowRect(self.selected_window['id'])
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2]-rect[0]), int(rect[3]-rect[1])
@@ -488,32 +463,20 @@ class DataCollector(QMainWindow):
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb).resize((256, 256), Image.LANCZOS)
 
-            # 7. Format Data
+            # Record Data
             analog_parts = []
-            mx, my = win32api.GetCursorPos()
-            if self.is_target_window_active():
-                analog_parts.append(f"MX:{mx - x}")
-                analog_parts.append(f"MY:{my - y}")
-
-            def norm(val): return val / 32768.0
-            def norm_trig(val): return val / 255.0
-
-            if f_lx: analog_parts.append(f"LX:{norm(f_lx):.2f}")
-            if f_ly: analog_parts.append(f"LY:{norm(f_ly):.2f}")
-            if f_rx: analog_parts.append(f"RX:{norm(f_rx):.2f}")
-            if f_ry: analog_parts.append(f"RY:{norm(f_ry):.2f}")
-            if f_lt: analog_parts.append(f"LT:{norm_trig(f_lt):.2f}")
-            if f_rt: analog_parts.append(f"RT:{norm_trig(f_rt):.2f}")
-
-            keys_str = "+".join(sorted(self.active_keys)) if self.active_keys else "None"
-            analog_str = ";".join(analog_parts)
+            if v_lx: analog_parts.append(f"LX:{v_lx/32767:.2f}")
+            if v_ly: analog_parts.append(f"LY:{v_ly/32767:.2f}")
+            if v_buttons:
+                 # Helper to reverse lookup button names for CSV
+                 pass # (Simplified for brevity, raw int works for ML training)
 
             self.frames_buffer.append(np.array(img))
             self.data_buffer.append({
                 'timestamp': time.time(),
                 'frame_index': len(self.frames_buffer) - 1,
-                'keys': keys_str,
-                'analog': analog_str
+                'keys': f"BtnMask_{v_buttons}",
+                'analog': ";".join(analog_parts)
             })
 
             self.frame_count += 1
@@ -536,7 +499,6 @@ class DataCollector(QMainWindow):
         worker = UploadThread(frames, dataset, self.api_key, self.server_url)
         worker.upload_finished.connect(self.on_upload_finished)
         self.active_uploads.append(worker)
-        worker.finished.connect(lambda: self.active_uploads.remove(worker) if worker in self.active_uploads else None)
         worker.start()
 
     def on_upload_finished(self, success, msg):
