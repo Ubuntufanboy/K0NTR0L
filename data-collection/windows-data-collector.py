@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 import time
 import csv
@@ -8,18 +9,14 @@ import subprocess
 import tempfile
 import ctypes
 from pathlib import Path
+from ctypes import wintypes
 
 # --- WINDOWS LIBRARIES ---
 import win32gui
 import win32api
 import win32con
 
-# --- CONTROLLER SETUP ---
-# CRITICAL FIX: Force Pygame to use the "dummy" video driver.
-# This prevents it from conflicting with the PyQt window system or crashing.
-os.environ["SDL_VIDEODRIVER"] = "dummy"
-import pygame
-
+# --- LIBRARIES ---
 from pynput import keyboard, mouse
 import mss
 import numpy as np
@@ -37,7 +34,60 @@ try:
 except Exception:
     pass
 
-# --- WORKER THREAD FOR UPLOADS ---
+# ==========================================
+#  NATIVE XINPUT WRAPPER (PASSIVE POLLING)
+# ==========================================
+# This allows us to read the controller without locking it from the emulator.
+# Requires: Controller to be XInput compatible (Xbox controller or wrapped via x360ce)
+
+class XInput:
+    class XINPUT_BUTTONS(ctypes.Structure):
+        _fields_ = [("wButtons", ctypes.c_ushort)]
+
+    class XINPUT_GAMEPAD(ctypes.Structure):
+        _fields_ = [("wButtons", ctypes.c_ushort),
+                    ("bLeftTrigger", ctypes.c_ubyte),
+                    ("bRightTrigger", ctypes.c_ubyte),
+                    ("sThumbLX", ctypes.c_short),
+                    ("sThumbLY", ctypes.c_short),
+                    ("sThumbRX", ctypes.c_short),
+                    ("sThumbRY", ctypes.c_short)]
+
+    class XINPUT_STATE(ctypes.Structure):
+        _fields_ = [("dwPacketNumber", ctypes.c_ulong),
+                    ("Gamepad", XINPUT_GAMEPAD)]
+
+    def __init__(self):
+        # Try to load XInput 1.4 (Win 8+) or 1.3 (DirectX 9)
+        try:
+            self.xinput = ctypes.windll.xinput1_4
+        except OSError:
+            try:
+                self.xinput = ctypes.windll.xinput1_3
+            except OSError:
+                self.xinput = None
+        
+        self.connected = False
+
+    def get_state(self, index=0):
+        if not self.xinput:
+            return None
+
+        state = self.XINPUT_STATE()
+        # 0 = Success, 1167 = Device Not Connected
+        res = self.xinput.XInputGetState(index, ctypes.byref(state))
+        
+        if res == 0:
+            self.connected = True
+            return state.Gamepad
+        else:
+            self.connected = False
+            return None
+
+# ==========================================
+#  WORKER THREAD
+# ==========================================
+
 class UploadThread(QThread):
     upload_finished = pyqtSignal(bool, str)
 
@@ -103,7 +153,9 @@ class UploadThread(QThread):
                     except OSError:
                         pass
 
-# --- GUI CLASSES ---
+# ==========================================
+#  GUI CLASSES
+# ==========================================
 
 class APIKeyDialog(QDialog):
     def __init__(self, parent=None):
@@ -138,7 +190,8 @@ class WindowSelector(QDialog):
         
         self.preview_label = QLabel()
         self.preview_label.setFixedSize(400, 300)
-        self.preview_label.setStyleSheet("border: 1px solid #333; bg-color: #000;")
+        # CSS FIX HERE
+        self.preview_label.setStyleSheet("border: 1px solid #333; background-color: #000;")
         self.preview_label.setScaledContents(True)
         layout.addWidget(self.preview_label)
 
@@ -173,7 +226,6 @@ class WindowSelector(QDialog):
             wid = int(selected.text().split("ID: ")[1].rstrip(")"))
             rect = win32gui.GetWindowRect(wid)
             
-            # FIX: Ensure all monitor values are standard Python Integers
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2] - rect[0]), int(rect[3] - rect[1])
             
@@ -186,7 +238,6 @@ class WindowSelector(QDialog):
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb)
                 
-                # Convert for Preview
                 img.thumbnail((400, 300), Image.LANCZOS)
                 data = io.BytesIO()
                 img.save(data, format='PNG')
@@ -199,7 +250,9 @@ class WindowSelector(QDialog):
         except Exception as e:
             QMessageBox.warning(self, "Preview Error", f"Could not preview: {e}")
 
-# --- MAIN COLLECTOR ---
+# ==========================================
+#  MAIN COLLECTOR
+# ==========================================
 
 class DataCollector(QMainWindow):
     input_event_signal = pyqtSignal(str, bool) 
@@ -226,10 +279,9 @@ class DataCollector(QMainWindow):
         self.idle_threshold = 5.0
         self.active_uploads = []
 
-        # Controller Setup
-        self.joystick = None
-        self.init_controller()
-
+        # XInput Setup
+        self.xinput = XInput()
+        
         self.init_ui()
         self.select_window()
         
@@ -237,19 +289,6 @@ class DataCollector(QMainWindow):
             self.setup_collectors()
         else:
             sys.exit(0)
-
-    def init_controller(self):
-        try:
-            pygame.display.init() # Needed for event system even with dummy driver
-            pygame.joystick.init()
-            if pygame.joystick.get_count() > 0:
-                self.joystick = pygame.joystick.Joystick(0)
-                self.joystick.init()
-                print(f"Controller Detected: {self.joystick.get_name()}")
-            else:
-                print("No USB Controller detected.")
-        except Exception as e:
-            print(f"Controller Init Error: {e}")
 
     def init_ui(self):
         self.setStyleSheet("background-color: #000000;")
@@ -262,7 +301,7 @@ class DataCollector(QMainWindow):
         self.status_label.setStyleSheet("color: #00FF00; font-weight: bold; font-size: 14px;")
         layout.addWidget(self.status_label)
         
-        self.info_label = QLabel(f"Controller: {'Connected' if self.joystick else 'None'}")
+        self.info_label = QLabel(f"Controller: Searching (XInput)...")
         self.info_label.setStyleSheet("color: #AAAAAA;")
         layout.addWidget(self.info_label)
 
@@ -310,7 +349,6 @@ class DataCollector(QMainWindow):
     # --- INPUT HANDLERS ---
     
     def is_target_window_active(self):
-        # Helper to check if our window is actually the foreground
         return win32gui.GetForegroundWindow() == self.selected_window['id']
 
     def on_kb_press(self, key):
@@ -328,18 +366,14 @@ class DataCollector(QMainWindow):
 
     def on_mouse_click(self, x, y, button, pressed):
         try:
-            # FIX: Raycast check
-            # We check if the window handle at the exact mouse coordinates matches our target.
-            # This handles overlapping windows correctly.
+            # Raycasting Check: Only record if mouse is ACTUALLY over our window
             hwnd_under_mouse = win32gui.WindowFromPoint((x, y))
             
-            # Sometimes WindowFromPoint returns a child element (button, textbox)
-            # We must verify if that child belongs to our parent window ID
             is_correct_window = False
             if hwnd_under_mouse == self.selected_window['id']:
                 is_correct_window = True
             else:
-                # Walk up the parent tree to see if the main window is our target
+                # Check parent hierarchy (handles UI elements inside window)
                 parent = hwnd_under_mouse
                 while parent:
                     parent = win32gui.GetParent(parent)
@@ -371,34 +405,53 @@ class DataCollector(QMainWindow):
             self.active_keys.clear()
 
         if not self.is_collecting:
-            return
+            # Poll controller just to see if it starts activity
+            gp = self.xinput.get_state(0)
+            if gp and gp.wButtons > 0:
+                 self.is_collecting = True
+                 self.status_label.setText("Status: Collecting")
+            else:
+                return
 
         try:
-            # 1. Controller Polling (Robust)
-            if self.joystick:
-                try:
-                    pygame.event.pump() 
-                    # N64/DirectInput controllers often map oddly. We poll all buttons.
-                    for i in range(self.joystick.get_numbuttons()):
-                        btn_name = f"JoyBtn{i}"
-                        if self.joystick.get_button(i):
-                            self.active_keys.add(btn_name)
-                            self.last_input_time = time.time()
-                        elif btn_name in self.active_keys:
-                            self.active_keys.remove(btn_name)
-                except Exception as e:
-                    # If controller disconnects/errors, don't crash the script
-                    print(f"Controller Error: {e}")
+            # 1. Controller Polling (XInput Snooping)
+            # This does not lock the device. It just reads memory.
+            gamepad = self.xinput.get_state(0)
+            
+            # Update GUI label once
+            if self.xinput.connected:
+                self.info_label.setText("Controller: Connected")
+            else:
+                self.info_label.setText("Controller: Not Found (Try x360ce)")
+
+            # Process Buttons
+            if gamepad:
+                # Map XInput buttons to strings
+                # A=4096, B=8192, X=16384, Y=32768, etc.
+                btns = gamepad.wButtons
+                button_map = {
+                    0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
+                    0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
+                    0x0010: 'Start', 0x0020: 'Back', 0x0100: 'LB', 0x0200: 'RB'
+                }
+                
+                found_activity = False
+                for mask, name in button_map.items():
+                    if btns & mask:
+                        self.active_keys.add(name)
+                        found_activity = True
+                    elif name in self.active_keys:
+                        self.active_keys.remove(name)
+                
+                if found_activity or abs(gamepad.sThumbLX) > 2000 or abs(gamepad.bRightTrigger) > 10:
+                    self.last_input_time = time.time()
 
             # 2. Capture Screen
-            # Re-fetch geometry every frame to support moving windows
             rect = win32gui.GetWindowRect(self.selected_window['id'])
             x, y = int(rect[0]), int(rect[1])
             w, h = int(rect[2]-rect[0]), int(rect[3]-rect[1])
             
-            # Check if minimized
-            if w <= 0 or h <= 0:
-                return
+            if w <= 0 or h <= 0: return
 
             with mss.mss() as sct:
                 monitor = {"top": y, "left": x, "width": w, "height": h}
@@ -410,20 +463,22 @@ class DataCollector(QMainWindow):
             
             # Mouse Relative
             mx, my = win32api.GetCursorPos()
-            rel_mx = mx - x
-            rel_my = my - y
-            analog_parts.append(f"MX:{rel_mx}")
-            analog_parts.append(f"MY:{rel_my}")
+            if self.is_target_window_active():
+                analog_parts.append(f"MX:{mx - x}")
+                analog_parts.append(f"MY:{my - y}")
 
-            # Controller Axes
-            if self.joystick:
-                try:
-                    for i in range(self.joystick.get_numaxes()):
-                        val = self.joystick.get_axis(i)
-                        # Deadzone prevents drifting noise from N64 sticks
-                        if abs(val) > 0.15: 
-                            analog_parts.append(f"AX{i}:{val:.3f}")
-                except: pass
+            # Controller Axes (Normalized -1.0 to 1.0)
+            if gamepad:
+                def norm_axis(val):
+                    return val / 32768.0
+                
+                # Deadzone filter (~10%)
+                if abs(gamepad.sThumbLX) > 3000: analog_parts.append(f"LX:{norm_axis(gamepad.sThumbLX):.2f}")
+                if abs(gamepad.sThumbLY) > 3000: analog_parts.append(f"LY:{norm_axis(gamepad.sThumbLY):.2f}")
+                if abs(gamepad.sThumbRX) > 3000: analog_parts.append(f"RX:{norm_axis(gamepad.sThumbRX):.2f}")
+                if abs(gamepad.sThumbRY) > 3000: analog_parts.append(f"RY:{norm_axis(gamepad.sThumbRY):.2f}")
+                if gamepad.bLeftTrigger > 10: analog_parts.append(f"LT:{gamepad.bLeftTrigger/255.0:.2f}")
+                if gamepad.bRightTrigger > 10: analog_parts.append(f"RT:{gamepad.bRightTrigger/255.0:.2f}")
 
             keys_str = "+".join(sorted(self.active_keys)) if self.active_keys else "None"
             analog_str = ";".join(analog_parts)
