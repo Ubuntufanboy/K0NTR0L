@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import time
 import csv
@@ -10,9 +9,17 @@ import tempfile
 import ctypes
 from pathlib import Path
 
+# --- WINDOWS LIBRARIES ---
 import win32gui
 import win32api
+import win32con
+
+# --- CONTROLLER SETUP ---
+# CRITICAL FIX: Force Pygame to use the "dummy" video driver.
+# This prevents it from conflicting with the PyQt window system or crashing.
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 import pygame
+
 from pynput import keyboard, mouse
 import mss
 import numpy as np
@@ -24,11 +31,13 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PyQt5.QtCore import QTimer, pyqtSignal, QThread
 from PyQt5.QtGui import QPixmap
 
+# --- HIGH DPI FIX ---
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 except Exception:
     pass
 
+# --- WORKER THREAD FOR UPLOADS ---
 class UploadThread(QThread):
     upload_finished = pyqtSignal(bool, str)
 
@@ -44,6 +53,7 @@ class UploadThread(QThread):
         csv_tmp_path = None
         
         try:
+            # 1. Stitch Images
             grid_size = 14
             img_size = 256
             total_size = grid_size * img_size
@@ -58,6 +68,7 @@ class UploadThread(QThread):
                 big_img.save(img_tmp, format='WEBP', quality=70, method=6)
                 img_tmp_path = img_tmp.name
 
+            # 2. Save CSV
             with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8', newline='') as csv_tmp:
                 fieldnames = ['timestamp', 'frame_index', 'keys', 'analog']
                 writer = csv.DictWriter(csv_tmp, fieldnames=fieldnames)
@@ -65,6 +76,7 @@ class UploadThread(QThread):
                 writer.writerows(self.dataset)
                 csv_tmp_path = csv_tmp.name
 
+            # 3. Upload
             cmd = [
                 'curl', '-X', 'POST',
                 '-H', f'X-API-KEY: {self.api_key}',
@@ -90,6 +102,8 @@ class UploadThread(QThread):
                         os.unlink(p)
                     except OSError:
                         pass
+
+# --- GUI CLASSES ---
 
 class APIKeyDialog(QDialog):
     def __init__(self, parent=None):
@@ -122,6 +136,12 @@ class WindowSelector(QDialog):
         self.window_list.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
         layout.addWidget(self.window_list)
         
+        self.preview_label = QLabel()
+        self.preview_label.setFixedSize(400, 300)
+        self.preview_label.setStyleSheet("border: 1px solid #333; bg-color: #000;")
+        self.preview_label.setScaledContents(True)
+        layout.addWidget(self.preview_label)
+
         self.preview_btn = QPushButton("Preview")
         self.preview_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
         self.preview_btn.clicked.connect(self.preview_window)
@@ -148,34 +168,54 @@ class WindowSelector(QDialog):
     def preview_window(self):
         selected = self.window_list.currentItem()
         if not selected: return
+        
         try:
             wid = int(selected.text().split("ID: ")[1].rstrip(")"))
             rect = win32gui.GetWindowRect(wid)
-            w, h = rect[2] - rect[0], rect[3] - rect[1]
-            if w <= 0: raise ValueError
             
-            with mss.mss() as sct:
-                img = sct.grab({'top': rect[1], 'left': rect[0], 'width': w, 'height': h})
-                self.selected_window = {'id': wid, 'x': rect[0], 'y': rect[1], 'width': w, 'height': h}
-                self.ok_btn.setEnabled(True)
-        except:
-            pass
+            # FIX: Ensure all monitor values are standard Python Integers
+            x, y = int(rect[0]), int(rect[1])
+            w, h = int(rect[2] - rect[0]), int(rect[3] - rect[1])
+            
+            if w <= 0 or h <= 0:
+                QMessageBox.warning(self, "Error", "Window is minimized or invalid.")
+                return
 
+            with mss.mss() as sct:
+                monitor = {'top': y, 'left': x, 'width': w, 'height': h}
+                shot = sct.grab(monitor)
+                img = Image.frombytes("RGB", shot.size, shot.rgb)
+                
+                # Convert for Preview
+                img.thumbnail((400, 300), Image.LANCZOS)
+                data = io.BytesIO()
+                img.save(data, format='PNG')
+                pixmap = QPixmap()
+                pixmap.loadFromData(data.getvalue())
+                self.preview_label.setPixmap(pixmap)
+                
+                self.selected_window = {'id': wid, 'x': x, 'y': y, 'width': w, 'height': h}
+                self.ok_btn.setEnabled(True)
+        except Exception as e:
+            QMessageBox.warning(self, "Preview Error", f"Could not preview: {e}")
+
+# --- MAIN COLLECTOR ---
 
 class DataCollector(QMainWindow):
-    input_event_signal = pyqtSignal(str, bool)
+    input_event_signal = pyqtSignal(str, bool) 
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Neuro Data Collector (USB+Mouse)")
+        self.setWindowTitle("Neuro Data Collector")
         self.config_path = Path.home() / ".neuro_collector_config.json"
         self.api_key = self.load_api_key() or self.prompt_api_key()
         if not self.api_key: sys.exit(0)
-        self.server_url = "https://neurosama.jiemonlabs.help/upload"
+        self.server_url = "https://incorporate-jpg-nutten-offered.trycloudflare.com/upload"
 
+        # State
         self.selected_window = None
         self.frames_buffer = []
-        self.data_buffer = []
+        self.data_buffer = [] 
         self.active_keys = set()
         
         self.frame_count = 0
@@ -200,7 +240,7 @@ class DataCollector(QMainWindow):
 
     def init_controller(self):
         try:
-            pygame.init()
+            pygame.display.init() # Needed for event system even with dummy driver
             pygame.joystick.init()
             if pygame.joystick.get_count() > 0:
                 self.joystick = pygame.joystick.Joystick(0)
@@ -263,13 +303,19 @@ class DataCollector(QMainWindow):
 
         self.screenshot_timer = QTimer()
         self.screenshot_timer.timeout.connect(self.capture_frame)
-        self.screenshot_timer.start(125) # ~8 FPS. Prolly for the best
+        self.screenshot_timer.start(125) 
 
         self.input_event_signal.connect(self.handle_input_event)
 
+    # --- INPUT HANDLERS ---
+    
+    def is_target_window_active(self):
+        # Helper to check if our window is actually the foreground
+        return win32gui.GetForegroundWindow() == self.selected_window['id']
+
     def on_kb_press(self, key):
         try:
-            if win32gui.GetForegroundWindow() == self.selected_window['id']:
+            if self.is_target_window_active():
                 k = key.char if hasattr(key, 'char') else str(key)
                 self.input_event_signal.emit(f"Key_{k}", True)
         except: pass
@@ -281,8 +327,31 @@ class DataCollector(QMainWindow):
         except: pass
 
     def on_mouse_click(self, x, y, button, pressed):
-        btn_str = str(button).replace('Button.', 'Mouse')
-        self.input_event_signal.emit(btn_str, pressed)
+        try:
+            # FIX: Raycast check
+            # We check if the window handle at the exact mouse coordinates matches our target.
+            # This handles overlapping windows correctly.
+            hwnd_under_mouse = win32gui.WindowFromPoint((x, y))
+            
+            # Sometimes WindowFromPoint returns a child element (button, textbox)
+            # We must verify if that child belongs to our parent window ID
+            is_correct_window = False
+            if hwnd_under_mouse == self.selected_window['id']:
+                is_correct_window = True
+            else:
+                # Walk up the parent tree to see if the main window is our target
+                parent = hwnd_under_mouse
+                while parent:
+                    parent = win32gui.GetParent(parent)
+                    if parent == self.selected_window['id']:
+                        is_correct_window = True
+                        break
+
+            if is_correct_window:
+                btn_str = str(button).replace('Button.', 'Mouse')
+                self.input_event_signal.emit(btn_str, pressed)
+        except Exception:
+            pass
 
     def handle_input_event(self, key_name, is_press):
         if is_press:
@@ -296,7 +365,6 @@ class DataCollector(QMainWindow):
                 self.active_keys.remove(key_name)
 
     def capture_frame(self):
-        # Idle Check
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
@@ -306,28 +374,41 @@ class DataCollector(QMainWindow):
             return
 
         try:
+            # 1. Controller Polling (Robust)
             if self.joystick:
-                pygame.event.pump()
-                
-                num_buttons = self.joystick.get_numbuttons()
-                for i in range(num_buttons):
-                    btn_name = f"JoyBtn{i}"
-                    if self.joystick.get_button(i):
-                        self.active_keys.add(btn_name)
-                        self.last_input_time = time.time()
-                    elif btn_name in self.active_keys:
-                        self.active_keys.remove(btn_name)
+                try:
+                    pygame.event.pump() 
+                    # N64/DirectInput controllers often map oddly. We poll all buttons.
+                    for i in range(self.joystick.get_numbuttons()):
+                        btn_name = f"JoyBtn{i}"
+                        if self.joystick.get_button(i):
+                            self.active_keys.add(btn_name)
+                            self.last_input_time = time.time()
+                        elif btn_name in self.active_keys:
+                            self.active_keys.remove(btn_name)
+                except Exception as e:
+                    # If controller disconnects/errors, don't crash the script
+                    print(f"Controller Error: {e}")
 
+            # 2. Capture Screen
+            # Re-fetch geometry every frame to support moving windows
             rect = win32gui.GetWindowRect(self.selected_window['id'])
-            x, y, w, h = rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1]
+            x, y = int(rect[0]), int(rect[1])
+            w, h = int(rect[2]-rect[0]), int(rect[3]-rect[1])
             
+            # Check if minimized
+            if w <= 0 or h <= 0:
+                return
+
             with mss.mss() as sct:
                 monitor = {"top": y, "left": x, "width": w, "height": h}
                 shot = sct.grab(monitor)
                 img = Image.frombytes("RGB", shot.size, shot.rgb).resize((256, 256), Image.LANCZOS)
 
+            # 3. Analog Data
             analog_parts = []
             
+            # Mouse Relative
             mx, my = win32api.GetCursorPos()
             rel_mx = mx - x
             rel_my = my - y
@@ -336,10 +417,13 @@ class DataCollector(QMainWindow):
 
             # Controller Axes
             if self.joystick:
-                for i in range(self.joystick.get_numaxes()):
-                    val = self.joystick.get_axis(i)
-                    if abs(val) > 0.1:
-                        analog_parts.append(f"AX{i}:{val:.3f}")
+                try:
+                    for i in range(self.joystick.get_numaxes()):
+                        val = self.joystick.get_axis(i)
+                        # Deadzone prevents drifting noise from N64 sticks
+                        if abs(val) > 0.15: 
+                            analog_parts.append(f"AX{i}:{val:.3f}")
+                except: pass
 
             keys_str = "+".join(sorted(self.active_keys)) if self.active_keys else "None"
             analog_str = ";".join(analog_parts)
