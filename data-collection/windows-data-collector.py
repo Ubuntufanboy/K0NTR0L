@@ -52,32 +52,34 @@ class XINPUT_STATE(ctypes.Structure):
 
 class XInputWrapper:
     def __init__(self):
-        # Try to load XInput 1.4 (Windows 8+) or 1.3 (DirectX 9/Win7)
         self.xinput = None
         self.connected = False
         
-        try:
-            self.xinput = ctypes.windll.xinput1_4
-        except OSError:
+        # Try loading XInput 1.4, then 1.3, then 9.1.0 (broad compatibility)
+        lib_names = ['xinput1_4.dll', 'xinput1_3.dll', 'xinput9_1_0.dll']
+        for lib in lib_names:
             try:
-                self.xinput = ctypes.windll.xinput1_3
-            except OSError:
-                self.xinput = None
+                self.xinput = ctypes.windll.LoadLibrary(lib)
+                print(f"XInput loaded via {lib}")
+                break
+            except Exception:
+                continue
         
     def get_state(self, index=0):
         if not self.xinput:
             return None
 
         state = XINPUT_STATE()
-        # XInputGetState returns 0 (ERROR_SUCCESS) if connected
-        res = self.xinput.XInputGetState(index, ctypes.byref(state))
-        
-        if res == 0:
-            self.connected = True
-            return state.Gamepad
-        else:
-            self.connected = False
-            return None
+        try:
+            res = self.xinput.XInputGetState(index, ctypes.byref(state))
+            if res == 0:
+                self.connected = True
+                return state.Gamepad
+        except Exception:
+            pass
+            
+        self.connected = False
+        return None
 
 # ==========================================
 #  WORKER THREAD
@@ -98,7 +100,7 @@ class UploadThread(QThread):
         csv_tmp_path = None
         
         try:
-            # 1. Stitch Images (14x14 grid)
+            # 1. Stitch Images
             grid_size = 14
             img_size = 256
             total_size = grid_size * img_size
@@ -121,7 +123,7 @@ class UploadThread(QThread):
                 writer.writerows(self.dataset)
                 csv_tmp_path = csv_tmp.name
 
-            # 3. Upload via Curl
+            # 3. Upload
             cmd = [
                 'curl', '-X', 'POST',
                 '-H', f'X-API-KEY: {self.api_key}',
@@ -179,34 +181,50 @@ class WindowSelector(QDialog):
         self.selected_window = None
         
         layout = QVBoxLayout()
+        
+        # List Widget
         self.window_list = QListWidget()
         self.window_list.setStyleSheet("background-color: #1a1a1a; color: white; border: 1px solid #333;")
         layout.addWidget(self.window_list)
         
+        # Refresh Button (NEW)
+        self.refresh_btn = QPushButton("Refresh List ⟳")
+        self.refresh_btn.setStyleSheet("background-color: #444; color: white; font-weight: bold; padding: 5px;")
+        self.refresh_btn.clicked.connect(self.populate_windows)
+        layout.addWidget(self.refresh_btn)
+
+        # Preview Area
         self.preview_label = QLabel()
         self.preview_label.setFixedSize(400, 300)
         self.preview_label.setStyleSheet("border: 1px solid #333; background-color: #000;")
         self.preview_label.setScaledContents(True)
         layout.addWidget(self.preview_label)
 
+        # Action Buttons
+        btn_layout = QHBoxLayout()
         self.preview_btn = QPushButton("Preview")
         self.preview_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
         self.preview_btn.clicked.connect(self.preview_window)
         
-        self.ok_btn = QPushButton("OK")
-        self.ok_btn.setStyleSheet("background-color: #2a2a2a; color: white;")
+        self.ok_btn = QPushButton("Start Collection")
+        self.ok_btn.setStyleSheet("background-color: #006600; color: white;")
         self.ok_btn.clicked.connect(self.accept)
         self.ok_btn.setEnabled(False)
         
-        layout.addWidget(self.preview_btn)
-        layout.addWidget(self.ok_btn)
+        btn_layout.addWidget(self.preview_btn)
+        btn_layout.addWidget(self.ok_btn)
+        layout.addLayout(btn_layout)
+        
         self.setLayout(layout)
         self.populate_windows()
 
     def populate_windows(self):
+        self.window_list.clear() # Clear existing items
+        
         def enum_cb(hwnd, windows):
             if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd):
                 windows.append((hwnd, win32gui.GetWindowText(hwnd)))
+        
         windows = []
         win32gui.EnumWindows(enum_cb, windows)
         for hwnd, title in sorted(windows, key=lambda x: x[1].lower()):
@@ -273,7 +291,7 @@ class DataCollector(QMainWindow):
         self.idle_threshold = 5.0
         self.active_uploads = []
 
-        # Initialize XInput Wrapper
+        # XInput Setup
         self.xinput = XInputWrapper()
         
         self.init_ui()
@@ -295,7 +313,7 @@ class DataCollector(QMainWindow):
         self.status_label.setStyleSheet("color: #00FF00; font-weight: bold; font-size: 14px;")
         layout.addWidget(self.status_label)
         
-        self.info_label = QLabel(f"Controller: Searching (XInput)...")
+        self.info_label = QLabel(f"Controller: Searching...")
         self.info_label.setStyleSheet("color: #AAAAAA;")
         layout.addWidget(self.info_label)
 
@@ -360,14 +378,12 @@ class DataCollector(QMainWindow):
 
     def on_mouse_click(self, x, y, button, pressed):
         try:
-            # Raycast: Ensure the window under the mouse is our target
             hwnd_under_mouse = win32gui.WindowFromPoint((x, y))
             
             is_correct_window = False
             if hwnd_under_mouse == self.selected_window['id']:
                 is_correct_window = True
             else:
-                # Walk up the parent tree (e.g., if clicking a child widget/button inside the window)
                 parent = hwnd_under_mouse
                 while parent:
                     parent = win32gui.GetParent(parent)
@@ -393,33 +409,31 @@ class DataCollector(QMainWindow):
                 self.active_keys.remove(key_name)
 
     def capture_frame(self):
-        # Auto-Idle Logic
         if self.is_collecting and (time.time() - self.last_input_time > self.idle_threshold):
             self.is_collecting = False
             self.status_label.setText("Status: Idle")
             self.active_keys.clear()
 
-        # If we are idle, check if controller activity should wake us up
+        # Check controller wake-up
         if not self.is_collecting:
             gp = self.xinput.get_state(0)
-            if gp and gp.wButtons > 0:
+            if gp and (gp.wButtons > 0 or abs(gp.sThumbLX) > 4000):
                  self.is_collecting = True
                  self.status_label.setText("Status: Collecting")
             else:
                 return
 
         try:
-            # 1. Controller Polling (XInput)
+            # 1. Controller Polling
             gamepad = self.xinput.get_state(0)
             
             if self.xinput.connected:
-                self.info_label.setText("Controller: Connected")
+                self.info_label.setText("Controller: Connected (XInput)")
             else:
                 self.info_label.setText("Controller: Not Found (Try x360ce)")
 
-            # Process Controller Buttons
             if gamepad:
-                # Standard XInput Button Map
+                # Button Map
                 button_map = {
                     0x1000: 'Btn_A', 0x2000: 'Btn_B', 0x4000: 'Btn_X', 0x8000: 'Btn_Y',
                     0x0001: 'DPad_Up', 0x0002: 'DPad_Down', 0x0004: 'DPad_Left', 0x0008: 'DPad_Right',
@@ -435,7 +449,7 @@ class DataCollector(QMainWindow):
                     elif name in self.active_keys:
                         self.active_keys.remove(name)
                 
-                # Check for analog movement to reset idle timer
+                # Activity check
                 if found_activity or abs(gamepad.sThumbLX) > 2000 or abs(gamepad.bRightTrigger) > 10:
                     self.last_input_time = time.time()
 
@@ -454,19 +468,17 @@ class DataCollector(QMainWindow):
             # 3. Analog Data
             analog_parts = []
             
-            # Mouse Relative
+            # Mouse
             mx, my = win32api.GetCursorPos()
-            # Only record mouse position if we are generally focused on that area
             if self.is_target_window_active():
                 analog_parts.append(f"MX:{mx - x}")
                 analog_parts.append(f"MY:{my - y}")
 
-            # Controller Axes
+            # Controller
             if gamepad:
                 def norm_axis(val):
                     return val / 32768.0
                 
-                # Add if outside deadzone
                 if abs(gamepad.sThumbLX) > 3000: analog_parts.append(f"LX:{norm_axis(gamepad.sThumbLX):.2f}")
                 if abs(gamepad.sThumbLY) > 3000: analog_parts.append(f"LY:{norm_axis(gamepad.sThumbLY):.2f}")
                 if abs(gamepad.sThumbRX) > 3000: analog_parts.append(f"RX:{norm_axis(gamepad.sThumbRX):.2f}")
@@ -493,7 +505,6 @@ class DataCollector(QMainWindow):
                 self.trigger_upload()
 
         except Exception as e:
-            # Tolerant loop to keep running
             print(f"Loop Error: {e}")
 
     def trigger_upload(self):
