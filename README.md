@@ -4,6 +4,9 @@
 
 K0NTR0L is a lightweight, real-time Vision-Language-Action (VLA) foundation model designed to execute natural language prompts within real-time environments. The architecture is engineered to prioritize inference latency, spatial grounding, and modularity. The modality of video games was selected due to the readily availablity of real-time video game data. K0NTR0L is initially trained via Behavior Cloning (Supervised Learning) with an eventual transition to Reinforcement Learning. K0NTR0L utilizes a hybrid convolutional-transformer vision backbone, a highly aligned text encoder, and computationally efficient multimodal fusion to map visual states and textual instructions directly to discrete and continuous controller inputs.
 
+## Code in repository
+DISCLAIMER: The code in this reposity is not production ready nor even completed. This repo is IN PROGRESS and will be updated as more progress is made. If you are interested in contributing, contact me!
+
 ## Visual Architecture Diagram
 ![Diagram](image9.jpg)
 NOTE: While K0NTR0L was designed as a controller for robotics, the training data relies on video game community collected data. This was done because of the issue of sparse rewards in robotic tasks. 
@@ -88,7 +91,7 @@ Where the individual losses are calculated over a batch of $N$ samples:
 
 ## Results
 Utilizing NitroGen, an AI capable of playing games without human prompting. However, this approach lead to poor convergence inside the 8hz control loop K0NTR0L utilizes. To mitigate this, Qwen3-VL-2b (Qwen) was utilized. The video below shows Qwen attempting to play Super Mario Bros.
-![Super Mario Video](clip.mp4)
+[![Mario Test](https://raw.githubusercontent.com/Ubuntufanboy/K0NTR0L/main/assets/thumbnail.png)](https://raw.githubusercontent.com/Ubuntufanboy/Ubuntufanboy/main/assets/clip.mp4)
 
 ## License
 
