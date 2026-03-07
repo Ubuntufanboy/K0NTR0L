@@ -91,7 +91,7 @@ Where the individual losses are calculated over a batch of $N$ samples:
 
 ## Results
 Utilizing NitroGen, an AI capable of playing games without human prompting. However, this approach lead to poor convergence inside the 8hz control loop K0NTR0L utilizes. To mitigate this, Qwen3-VL-2b (Qwen) was utilized. The video below shows Qwen attempting to play Super Mario Bros.
-[![Mario Test](https://raw.githubusercontent.com/Ubuntufanboy/K0NTR0L/main/assets/thumbnail.png)](https://raw.githubusercontent.com/Ubuntufanboy/Ubuntufanboy/main/assets/clip.mp4)
+[![Mario Test](clip.gif)
 
 ## License
 
